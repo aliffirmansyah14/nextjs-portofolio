@@ -33,13 +33,15 @@ export const authenticate = async (prevState: unknown, formData: FormData) => {
 export const createUser = async (email: string, password: string) => {
 	const salt = await bcrypt.genSalt(10);
 	const hashPassword = await bcrypt.hash(password, salt);
-	const user = await prisma.user.create({
-		data: {
-			email,
-			password: hashPassword,
-		},
-	});
-	if (user) {
-		console.log(user);
+	try {
+		const user = await prisma.user.create({
+			data: {
+				email,
+				password: hashPassword,
+			},
+		});
+		return user;
+	} catch (error) {
+		console.log(`Cannot create user in createUser Function :${error}`);
 	}
 };
