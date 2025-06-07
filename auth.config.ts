@@ -17,6 +17,9 @@ export const authConfig = {
 			}
 			return true;
 		},
+		// session: async({session,token})=>{
+		// 		session
+		// }
 	},
 	providers: [],
 } satisfies NextAuthConfig;

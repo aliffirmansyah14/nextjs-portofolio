@@ -14,7 +14,7 @@ const LoginPage = () => {
 		<div className="min-h-screen w-full sm:py-20 ">
 			<main className="mx-auto max-w-md border border-accent rounded-lg p-8 pb-12">
 				<h1 className="mb-5 text-center font-semibold text-lg sm:text-2xl">
-					Login Form
+					Login
 				</h1>
 				<form className="space-y-4" action={formAction}>
 					<div className="space-y-2">
@@ -31,8 +31,13 @@ const LoginPage = () => {
 							<p className="text-red-500">{state.error.password} </p>
 						)}
 					</div>
-					<Button type="submit" className="w-full" disabled={isPending}>
-						Submit
+					<Button
+						type="submit"
+						variant="secondary"
+						className="w-full"
+						disabled={isPending}
+					>
+						{isPending ? "Submiting..." : "Submit"}
 					</Button>
 				</form>
 				<div
