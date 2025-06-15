@@ -78,7 +78,7 @@ const Footer = () => {
 const ButtonHireMe = () => {
 	return (
 		<Link
-			href={"/email"}
+			href="mailto:aliffirmansyah1407@gmail.com"
 			className="relative bg-accent rounded-full h-fit tracking-tighter cursor-pointer py-3 md:py-4 ps-14 md:ps-16 pe-3 md:pe-5 gap-2 group text-nowrap"
 		>
 			<div className="bg-background p-3 absolute w-[auto] left-1 md:left-2 top-1/2 -translate-y-1/2 group-hover:[width:calc(100%-8px)] md:group-hover:[width:calc(100%-16px)] rounded-full flex items-center justify-center transition-[width] duration-500 group-active:[width:calc(100%-16px)]">

@@ -12,7 +12,7 @@ const useProgress = () => {
 			state === "in-progress" ? 600 : undefined
 		);
 		return () => clearInterval(progressInterval);
-	}, [value, state]);
+	}, [state]);
 
 	useEffect(() => {
 		let progressEnded: NodeJS.Timeout | string | number | undefined;
@@ -28,7 +28,7 @@ const useProgress = () => {
 	const progressingValue = (interval: NodeJS.Timeout) => {
 		if (state === "in-progress") {
 			const randomValue = getRandomValue(1, 30);
-			setValue(Math.min(value + randomValue, 100));
+			setValue(acc => Math.min(acc + randomValue, 100));
 		} else if (state === "complete") {
 			clearInterval(interval);
 			setValue(100);

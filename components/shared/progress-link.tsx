@@ -15,13 +15,13 @@ const ProgressLink = ({ href, children, ...rest }: ProgressLinkProps) => {
 
 	const navigateToDestination = (e: React.MouseEvent<HTMLAnchorElement>) => {
 		e.preventDefault();
-		progress.start(); // show the indicator
+		progress.start();
 
 		startTransition(() => {
 			if (href) {
 				router.push(href);
 			}
-			progress.done(); // only runs when the destination page is fully loaded
+			progress.done();
 		});
 	};
 
