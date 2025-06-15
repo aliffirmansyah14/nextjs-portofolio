@@ -1,0 +1,61 @@
+import { useEffect, useState } from "react";
+
+const useProgress = () => {
+	const [state, setState] = useState<"initial" | "in-progress" | "complete">(
+		"initial"
+	);
+	const [value, setValue] = useState<number>(0);
+
+	useEffect(() => {
+		const progressInterval = setInterval(
+			progressingValue,
+			state === "in-progress" ? 600 : undefined
+		);
+		return () => clearInterval(progressInterval);
+	}, [value, state]);
+
+	useEffect(() => {
+		let progressEnded: NodeJS.Timeout | string | number | undefined;
+		if (value === 100) {
+			progressEnded = setTimeout(() => {
+				reset();
+			}, 300);
+		}
+
+		return () => clearTimeout(progressEnded);
+	}, [value]);
+
+	const progressingValue = (interval: NodeJS.Timeout) => {
+		if (state === "in-progress") {
+			const randomValue = getRandomValue(1, 30);
+			setValue(Math.min(value + randomValue, 100));
+		} else if (state === "complete") {
+			clearInterval(interval);
+			setValue(100);
+		}
+	};
+	const getRandomValue = (min: number, max: number) => {
+		return Math.floor(Math.random() * (max - min + 1) + min);
+	};
+
+	const start = () => {
+		setState("in-progress");
+	};
+
+	const reset = () => {
+		setState("initial");
+		setValue(0);
+	};
+	const done = () => {
+		setState("complete");
+	};
+	return {
+		state,
+		value,
+		start,
+		reset,
+		done,
+	};
+};
+
+export default useProgress;

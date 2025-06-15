@@ -1,4 +1,5 @@
 "use client";
+import { useActiveSection } from "@/hooks/useActiveSession";
 import { cn } from "@/lib/utils";
 import { MenuIcon, X } from "lucide-react";
 import Link from "next/link";
@@ -6,12 +7,14 @@ import { useState } from "react";
 
 const links = [
 	{ label: "HOME", href: "#home", sectionId: "home" },
-	{ label: "PORTOFOLIO", href: "#portofolio", sectionId: "portofolio" },
 	{ label: "ABOUT", href: "#about", sectionId: "about" },
+	{ label: "PORTOFOLIO", href: "#portofolio", sectionId: "portofolio" },
 ];
 
 const Navbar = () => {
 	const [isMenuVisible, setIsMenuVisible] = useState(false);
+	const activeSection = useActiveSection(links[0].sectionId);
+	// console.log(activeSection);
 
 	const handleOnClickMenu = () => {
 		setIsMenuVisible(prev => !prev);
@@ -22,19 +25,13 @@ const Navbar = () => {
 	};
 
 	return (
-		<header className="w-full border-b border-accent">
+		<header className="w-full border-b border-accent sticky top-0 bg-background z-10">
 			<nav className="container mx-auto h-16 flex items-center justify-between px-6 md:px-16 lg:px-20">
 				<Logo />
 				<ul className="hidden md:flex justify-center items-center gap-6">
 					{links.map((link, index) => {
-						const isLinkActive = index === 0;
-						return (
-							<NavbarLink
-								key={link.sectionId}
-								active={isLinkActive}
-								{...link}
-							/>
-						);
+						const isLinkActive = link.sectionId === activeSection;
+						return <NavbarLink key={index} active={isLinkActive} {...link} />;
 					})}
 				</ul>
 				<MenuButton onClick={handleOnClickMenu} type="dekstop">
@@ -44,20 +41,40 @@ const Navbar = () => {
 
 			<NavigasiMenuMobile
 				onClick={handleOnClickMenu}
-				className={`${isMenuVisible ? "z-10 opacity-100" : "opacity-0"}`}
+				className={`${
+					isMenuVisible ? "z-10 opacity-100" : "opacity-0 pointer-events-none"
+				}`}
 			/>
 		</header>
 	);
 };
 export default Navbar;
 
-const Logo = () => {
+type Logoprops = {
+	size?: "sm" | "md" | "lg";
+};
+
+export const Logo = ({ size = "md" }: Logoprops) => {
+	const logoVariant = {
+		sm: {
+			logo: "text-xl",
+			text: "text-lg",
+		},
+		md: {
+			logo: "text-2xl",
+			text: "text-xl",
+		},
+		lg: {
+			logo: "text-3xl",
+			text: "text-2xl",
+		},
+	};
 	return (
-		<div className="flex justify-center items-end gap-1.5">
-			<div className="size-8 rounded-full font-bold border-2 border-primary-foreground flex items-center justify-center">
-				<p className="text-2xl">a</p>
+		<div className="flex items-end gap-1.5">
+			<div className="size-8 rounded-full font-bold border-2 border-black dark:border-primary-foreground flex items-center justify-center">
+				<p className={logoVariant[size].logo}>a</p>
 			</div>
-			<p className=" font-bold text-xl">alip.</p>
+			<p className={`font-bold ${logoVariant[size].text}`}>alip.</p>
 		</div>
 	);
 };

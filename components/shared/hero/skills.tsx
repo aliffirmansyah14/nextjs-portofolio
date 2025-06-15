@@ -56,13 +56,13 @@ const listSkill: skill[] = [
 
 const Skills = () => {
 	return (
-		<div className="w-full max-w-2xl mx-auto relative flex gap-x-4 overflow-hidden inset-0 pointer-events-none [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)]">
+		<div className="w-full max-w-2xl mx-auto relative flex gap-x-4 overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)] group">
 			{[1, 2].map(num => {
 				return (
 					<div
 						key={num}
 						className={cn(
-							"whitespace-nowrap flex gap-x-4",
+							"whitespace-nowrap flex gap-x-4 group-hover:paused running",
 							num === 1
 								? "animate-marquee"
 								: "animate-marquee-2 ms-4 absolute top-0"

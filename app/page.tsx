@@ -13,8 +13,8 @@ export default function Home() {
 				<About />
 				<Portofolio />
 			</main>
+			<div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
 			<footer className="w-full ">
-				<div className="w-full h-px bg-gradient-to-r from-transparent via-border to-transparent"></div>
 				<Footer />
 			</footer>
 		</>

@@ -17,19 +17,6 @@ const Hero = () => {
 				</h1>
 
 				<Skills />
-				{/* <div className="absolute w-fit left-1/2 -translate-x-1/2 bottom-4">
-					<Button
-						variant={"link"}
-						className="mx-auto cursor-pointer size-10 p-0 animate-scroll-button"
-					>
-						<Image
-							alt="arrow-down"
-							src={"/arrow-down.svg"}
-							width={40}
-							height={40}
-						/>
-					</Button>
-				</div> */}
 			</div>
 		</Section>
 	);

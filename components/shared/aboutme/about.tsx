@@ -4,7 +4,6 @@ import Image from "next/image";
 const AboutMe = () => {
 	return (
 		<Section id="about">
-			{/* <HeaderSection badgeText="About Me" text="Passionate design" /> */}
 			<div className="mt-12 grid md:grid-cols-2 items-center gap-x-24">
 				<div className="flex-1">
 					<p className="text-muted-foreground tracking-tight font-mono">

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Work_Sans } from "next/font/google";
 import "./globals.css";
+import { ProgressBarProvider } from "@/context/ProgressBarContext";
 
 const workSans = Work_Sans({
 	variable: "--font-work-sans",
@@ -19,7 +20,9 @@ export const RootLayout = ({
 }>) => {
 	return (
 		<html lang="en" className="dark">
-			<body className={`${workSans.className} antialiased`}>{children}</body>
+			<body className={`${workSans.className} antialiased`}>
+				<ProgressBarProvider>{children}</ProgressBarProvider>
+			</body>
 		</html>
 	);
 };

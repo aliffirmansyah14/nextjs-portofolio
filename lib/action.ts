@@ -12,18 +12,29 @@ export const authenticate = async (prevState: unknown, formData: FormData) => {
 	);
 	if (!parsedFormData.success) {
 		return {
+			field: Object.fromEntries(formData.entries()),
 			error: parsedFormData.error.flatten().fieldErrors,
 		};
 	}
+
 	try {
-		await signIn("credentials", formData);
+		await signIn("credentials", {
+			...Object.fromEntries(formData.entries()),
+			redirectTo: "/dashboard",
+		});
 	} catch (error) {
 		if (error instanceof AuthError) {
 			switch (error.type) {
 				case "CredentialsSignin":
-					return { message: "Invalid Credentials" };
+					return {
+						field: Object.fromEntries(formData.entries()),
+						message: "Invalid Credentials",
+					};
 				default:
-					return { nessage: "Something wennt wrong" };
+					return {
+						field: Object.fromEntries(formData.entries()),
+						nessage: "Something wennt wrong",
+					};
 			}
 		}
 		throw error;
