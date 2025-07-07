@@ -16,6 +16,7 @@ const informations = [
 	},
 	{
 		header: "Email Address",
+		tag: "a",
 		content: ["aliffirmansyah1407@gmail.com", "aliffirmansyah1407@outlook.com"],
 	},
 	{
@@ -77,7 +78,7 @@ const Footer = () => {
 
 const ButtonHireMe = () => {
 	return (
-		<Link
+		<a
 			href="mailto:aliffirmansyah1407@gmail.com"
 			className="relative bg-accent rounded-full h-fit tracking-tighter cursor-pointer py-3 md:py-4 ps-14 md:ps-16 pe-3 md:pe-5 gap-2 group text-nowrap"
 		>
@@ -85,7 +86,7 @@ const ButtonHireMe = () => {
 				<ArrowRight className="size-4 md:size-5" />
 			</div>
 			Hire Me Now!
-		</Link>
+		</a>
 	);
 };
 
@@ -103,13 +104,15 @@ const InformationsCard = () => {
 						</CardHeader>
 						<CardContent className="space-y-1 px-0">
 							{information.content.map((content, i) => {
+								const Comp = information.tag !== undefined ? "a" : "p";
 								return (
-									<p
+									<Comp
 										key={i}
-										className="text-nowrap text-muted-foreground/60 text-xs"
+										href={Comp === "a" ? `mailto:${content}` : ""}
+										className="text-nowrap text-muted-foreground/60 text-xs block"
 									>
 										{content}
-									</p>
+									</Comp>
 								);
 							})}
 						</CardContent>
