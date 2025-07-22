@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 
-export function useActiveSection(defaultValue: string) {
-	const [activeSection, setActiveSection] = useState(defaultValue);
+export function useActiveSection(sectionId?: string) {
+	const [activeSection, setActiveSection] = useState("home");
+	// const [isRendered, setIsRendered] = useState<boolean>(false);
 
 	useEffect(() => {
 		if (typeof window === "undefined") return; // Ensure this runs only on the client side
@@ -37,6 +38,13 @@ export function useActiveSection(defaultValue: string) {
 
 		return () => observer.disconnect();
 	}, []);
+
+	// useEffect(() => {
+	// 	if (isRendered) return;
+	// 	if (activeSection === sectionId) {
+	// 		setIsRendered(true);
+	// 	}
+	// }, [activeSection]);
 
 	return activeSection;
 }

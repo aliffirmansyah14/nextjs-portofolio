@@ -1,10 +1,10 @@
 "use client";
-import { Button } from "@/components/ui/button";
+import { Button, ButtonProps } from "@/components/ui/button";
 import { AuthError } from "next-auth";
 import { signOut } from "next-auth/react";
 import { useState } from "react";
 
-const LogoutButton = () => {
+const LogoutButton = ({ className, ...rest }: ButtonProps) => {
 	const [isLoading, setIsloading] = useState<boolean>(false);
 
 	const handleOnClickLogout = async (
@@ -33,10 +33,10 @@ const LogoutButton = () => {
 
 	return (
 		<Button
-			variant={"default"}
 			onClick={handleOnClickLogout}
 			disabled={isLoading}
-			className="rounded"
+			className={className}
+			{...rest}
 		>
 			{!isLoading ? "Logout" : "Loading..."}
 		</Button>

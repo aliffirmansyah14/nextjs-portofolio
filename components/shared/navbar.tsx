@@ -1,9 +1,11 @@
 "use client";
 import { useActiveSection } from "@/hooks/useActiveSession";
 import { cn } from "@/lib/utils";
-import { MenuIcon, X } from "lucide-react";
+import { LayoutDashboardIcon, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import ProgressLink from "./progress-link";
+import { useSession } from "next-auth/react";
 
 const links = [
 	{ label: "HOME", href: "#home", sectionId: "home" },
@@ -12,9 +14,9 @@ const links = [
 ];
 
 const Navbar = () => {
+	const { data: session } = useSession();
 	const [isMenuVisible, setIsMenuVisible] = useState(false);
 	const activeSection = useActiveSection(links[0].sectionId);
-	// console.log(activeSection);
 
 	const handleOnClickMenu = () => {
 		setIsMenuVisible(prev => !prev);
@@ -33,6 +35,11 @@ const Navbar = () => {
 						const isLinkActive = link.sectionId === activeSection;
 						return <NavbarLink key={index} active={isLinkActive} {...link} />;
 					})}
+					{session ? (
+						<ProgressLink href="/dashboard">
+							<LayoutDashboardIcon />
+						</ProgressLink>
+					) : null}
 				</ul>
 				<MenuButton onClick={handleOnClickMenu} type="dekstop">
 					<MenuIcon size={25} />
@@ -52,9 +59,10 @@ export default Navbar;
 
 type Logoprops = {
 	size?: "sm" | "md" | "lg";
+	disabledText?: boolean;
 };
 
-export const Logo = ({ size = "md" }: Logoprops) => {
+export const Logo = ({ size = "md", disabledText = false }: Logoprops) => {
 	const logoVariant = {
 		sm: {
 			logo: "text-xl",
@@ -74,7 +82,9 @@ export const Logo = ({ size = "md" }: Logoprops) => {
 			<div className="size-8 rounded-full font-bold border-2 border-black dark:border-primary-foreground flex items-center justify-center">
 				<p className={logoVariant[size].logo}>a</p>
 			</div>
-			<p className={`font-bold ${logoVariant[size].text}`}>alip.</p>
+			{!disabledText && (
+				<p className={`font-bold ${logoVariant[size].text}`}>alip.</p>
+			)}
 		</div>
 	);
 };

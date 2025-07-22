@@ -108,7 +108,7 @@ const InformationsCard = () => {
 								return (
 									<Comp
 										key={i}
-										href={Comp === "a" ? `mailto:${content}` : ""}
+										href={Comp === "a" ? `mailto:${content}` : undefined}
 										className="text-nowrap text-muted-foreground/60 text-xs block"
 									>
 										{content}

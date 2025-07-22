@@ -28,7 +28,7 @@ export const authenticate = async (prevState: unknown, formData: FormData) => {
 				case "CredentialsSignin":
 					return {
 						field: Object.fromEntries(formData.entries()),
-						message: "Invalid Credentials",
+						message: "Username or Password is incorrect",
 					};
 				default:
 					return {

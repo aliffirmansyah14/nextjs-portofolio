@@ -3,14 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { authenticate } from "@/lib/action";
-import { startTransition, useActionState, useEffect, useState } from "react";
+import { useActionState, useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
 import ProgressLink from "../progress-link";
 
 const LoginForm = () => {
-	const router = useRouter();
 	const [isPasswordVisible, setIsPasswordVisible] = useState<boolean>(false);
 	const [state, formAction, isPending] = useActionState(
 		authenticate,

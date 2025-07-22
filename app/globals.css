@@ -197,7 +197,7 @@
 	--shadow-xl: var(--shadow-xl);
 	--shadow-2xl: var(--shadow-2xl);
 
-	--animate-fade-in: fadeIn 1s ease-in;
+	--animate-fade-in: fadeIn 0.5s ease-in forwards;
 	--animate-scroll-button: fadeIn 2s ease-in, bounce 1s linear 2.5s infinite;
 	--animate-marquee: marquee 60s linear infinite;
 	--animate-marquee-2: marquee2 60s linear infinite;
@@ -221,9 +221,11 @@
 
 	@keyframes fadeIn {
 		from {
+			transform: translateY(10px);
 			opacity: 0;
 		}
 		to {
+			transform: translateY(0px);
 			opacity: 1;
 		}
 	}
