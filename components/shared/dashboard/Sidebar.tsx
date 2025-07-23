@@ -78,7 +78,11 @@ const Sidebar = () => {
 
 export default Sidebar;
 
-export const SidebarTrigger = () => {
+export const SidebarTrigger = ({
+	iconStyle = "size-6",
+}: {
+	iconStyle?: string;
+}) => {
 	const { isOpen, setIsOpen } = useSidebar();
 	return (
 		<button
@@ -87,9 +91,13 @@ export const SidebarTrigger = () => {
 				e.preventDefault();
 				setIsOpen(prev => !prev);
 			}}
-			className="py-1 px-2 flex items-center gap-2 hover:bg-primary/30 rounded cursor-pointer [&>svg]:size-6"
+			className="py-1 px-2 flex items-center gap-2 hover:bg-primary/30 rounded cursor-pointer"
 		>
-			{isOpen ? <SidebarOpen /> : <SidebarClose />}
+			{isOpen ? (
+				<SidebarClose className={iconStyle} />
+			) : (
+				<SidebarOpen className={iconStyle} />
+			)}
 			{/* <span>{isOpen ? "close" : "open"}</span> */}
 		</button>
 	);
