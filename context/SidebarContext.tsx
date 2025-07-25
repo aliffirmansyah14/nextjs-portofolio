@@ -1,4 +1,5 @@
 "use client";
+import { isDesktopUserAgent } from "@/lib/utils";
 import { createContext, use, useState } from "react";
 
 type SidebarContextType = {
@@ -17,7 +18,7 @@ const useSidebar = () => {
 };
 
 const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
-	const [isOpen, setIsOpen] = useState<boolean>(true);
+	const [isOpen, setIsOpen] = useState<boolean>(isDesktopUserAgent() ?? false);
 
 	return (
 		<SidebarContext value={{ isOpen, setIsOpen }}>{children}</SidebarContext>

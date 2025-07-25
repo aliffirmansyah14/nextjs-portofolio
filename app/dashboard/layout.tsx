@@ -12,7 +12,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 		<div className="min-h-screen min-w-full bg-background flex">
 			<SidebarProvider>
 				<Sidebar />
-				<main className="flex-1 p-2">{children}</main>
+				<main className="flex-1 p-2 overflow-hidden">{children}</main>
 			</SidebarProvider>
 		</div>
 	);
