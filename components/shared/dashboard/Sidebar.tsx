@@ -45,7 +45,7 @@ const Sidebar = () => {
 			<aside
 				className={`${
 					isOpen ? "md:block" : "hidden"
-				} md:relative fixed z-50 top-0 bottom-0 bg-secondary w-[230px] md:w-full md:max-w-[250px] min-h-[100dvh] p-2`}
+				} md:relative fixed z-40 top-0 bottom-0 bg-secondary w-[230px] md:w-full md:max-w-[250px] min-h-[100dvh] p-2`}
 			>
 				<div className="flex flex-col h-full py-2">
 					<header className="flex gap-2 items-center">

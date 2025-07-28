@@ -56,3 +56,20 @@ export const createUser = async (email: string, password: string) => {
 		console.log(`Cannot create user in createUser Function :${error}`);
 	}
 };
+
+export const seedCreateCaregory = async () => {
+	const categories = [
+		{ name: "react js" },
+		{ name: "laravel" },
+		{ name: "html css" },
+		{ name: "next js" },
+	];
+	try {
+		await prisma.category.createMany({
+			data: categories,
+		});
+		return "success seed category";
+	} catch (error) {
+		console.log(`Cannot create user in createUser Function :${error}`);
+	}
+};

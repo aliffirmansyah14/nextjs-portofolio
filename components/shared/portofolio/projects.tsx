@@ -1,17 +1,17 @@
 "use client";
 import { useState } from "react";
 import Project, { ProjectType } from "./project";
-import Tabs, { CategoryType } from "./tabs";
+import Tabs, { CategoriesType } from "./tabs";
 
 type ProjectsProps = {
 	projects: ProjectType[];
+	categories: CategoriesType[];
 };
-const categories: CategoryType[] = ["all", "html css", "laravel", "reactjs"];
 
-const Projects = ({ projects }: ProjectsProps) => {
-	const [isTabActive, setIsTabActive] = useState<CategoryType>("all");
+const Projects = ({ projects, categories }: ProjectsProps) => {
+	const [isTabActive, setIsTabActive] = useState<string>("all");
 
-	const handleOnClickTab = (selectedCategory: CategoryType) => {
+	const handleOnClickTab = (selectedCategory: string) => {
 		setIsTabActive(selectedCategory);
 	};
 

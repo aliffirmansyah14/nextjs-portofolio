@@ -1,10 +1,13 @@
 import Projects from "./projects";
-import { getProjects } from "@/lib/api";
+import { getCategories, getProjects } from "@/lib/api";
 
 const ListProjects = async () => {
-	const projects = await getProjects(3000);
+	const [categories, projects] = await Promise.all([
+		getCategories(),
+		getProjects(2000),
+	]);
 
-	return <Projects projects={projects} />;
+	return <Projects projects={projects} categories={categories} />;
 };
 
 export default ListProjects;

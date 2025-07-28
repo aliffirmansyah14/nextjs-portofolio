@@ -44,6 +44,10 @@ const FormAddPortofolio = () => {
 							<Label htmlFor="tech">Tech stack</Label>
 							<Input id="tech" name="tech" placeholder="react js" />
 						</div>
+						<div className="grid gap-3">
+							<Label htmlFor="image">Tech stack</Label>
+							<Input type="file" id="image" name="image" required />
+						</div>
 					</div>
 					<DialogFooter>
 						<DialogClose asChild>

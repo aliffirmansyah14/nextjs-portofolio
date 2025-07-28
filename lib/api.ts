@@ -1,5 +1,6 @@
 "use server";
 import { ProjectType } from "@/components/shared/portofolio/project";
+import { prisma } from "./prisma";
 
 const projects: ProjectType[] = [
 	{
@@ -51,4 +52,19 @@ export const getProjects = async (delay: number = 1000) => {
 		setTimeout(resolve, delay);
 	});
 	return projects;
+};
+
+export const getCategories = async () => {
+	try {
+		const categories = await prisma.category.findMany({
+			select: {
+				name: true,
+			},
+		});
+		categories.unshift({ name: "all" });
+		return categories;
+	} catch (error) {
+		console.log(`error get categories : ${error}`);
+		return [];
+	}
 };

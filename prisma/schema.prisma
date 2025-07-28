@@ -3,6 +3,7 @@
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
  
 generator client {
@@ -59,4 +60,25 @@ model VerificationToken {
  
   @@unique([identifier, token])
   @@map("verification_tokens")
+}
+
+model Project{
+	id					String @id @default(cuid())
+	name				String
+	imageUrl 		String?
+	redirectUrl 	String
+	tech 				String[]
+	categoryId 		String
+	category 		Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+	@@map("projects")
+}
+
+model Category{
+	id			 	String @id @default(cuid())
+	name 			String 
+	projects 	Project[]
+
+	@@unique([name])
+	@@map("category")
 }
