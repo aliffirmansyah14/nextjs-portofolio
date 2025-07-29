@@ -19,9 +19,8 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { signOut, useSession } from "next-auth/react";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useState } from "react";
 import { AuthError } from "next-auth";
-import { isDesktopUserAgent } from "@/lib/utils";
 
 const sidebarLinks = [
 	{ href: "/dashboard", label: "dashboard", icon: <LayoutDashboardIcon /> },

@@ -3,6 +3,7 @@ import { Prisma } from "@prisma/client";
 
 export type CategoriesType = Prisma.CategoryGetPayload<{
 	select: {
+		id: true;
 		name: true;
 	};
 }>;
@@ -14,9 +15,16 @@ type TabsProps = {
 };
 
 const Tabs = ({ categories, onClick, isActive }: TabsProps) => {
-	// categories.unshift({ name: "all" });
 	return (
 		<div className="flex items-center gap-2 mt-7 flex-nowrap overflow-x-auto">
+			<div onClick={() => onClick("all")} className="cursor-pointer">
+				<Badge
+					variant={isActive === "all" ? "default" : "outline"}
+					className="rounded-2xl px-2 py-1 capitalize"
+				>
+					all
+				</Badge>
+			</div>
 			{categories.map((category, i) => {
 				return (
 					<div

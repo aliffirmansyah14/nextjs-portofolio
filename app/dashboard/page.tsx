@@ -2,7 +2,7 @@ import Header from "@/components/shared/dashboard/Header";
 
 const DashboardPage = () => {
 	return (
-		<div className="container p-2 md:pl-2 md:pr-12">
+		<div className="p-2 md:pl-2 md:pr-12">
 			<Header text="Dashboard" />
 			<div className="md:px-2 mt-4 grid md:grid-cols-3 gap-4">
 				<div className="h-[100px] bg-primary rounded-2xl px-4 py-2">

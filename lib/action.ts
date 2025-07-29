@@ -1,7 +1,11 @@
 "use server";
 
 import { signIn } from "@/auth";
-import { loginFormSchema } from "./schema";
+import {
+	createPortofolioFormSchema,
+	createPortofolioFormType,
+	loginFormSchema,
+} from "./schema";
 import { prisma } from "./prisma";
 import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
@@ -72,4 +76,25 @@ export const seedCreateCaregory = async () => {
 	} catch (error) {
 		console.log(`Cannot create user in createUser Function :${error}`);
 	}
+};
+
+export const createPortofolio = async (
+	prevState: unknown,
+	formData: FormData
+) => {
+	const createFormdata: createPortofolioFormType = {
+		name: formData.get("name") as string,
+		category: formData.get("category") as string,
+		image: formData.get("image") as File,
+		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
+	};
+	const parsedFormData = createPortofolioFormSchema.safeParse(createFormdata);
+	if (!parsedFormData.success) {
+		return {
+			field: Object.fromEntries(formData.entries()),
+			error: parsedFormData.error.flatten().fieldErrors,
+		};
+	}
+
+	console.log(parsedFormData);
 };

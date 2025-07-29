@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { CategoryType } from "./tabs";
+import { CategoriesType } from "./tabs";
 
 export type TechType =
 	| "Next JS"
@@ -14,7 +14,7 @@ export type ProjectType = {
 	redirectUrl: string;
 	imageUrl?: string;
 	tech: TechType[];
-	category: CategoryType;
+	category: string;
 };
 
 type ProjectProps = ProjectType;

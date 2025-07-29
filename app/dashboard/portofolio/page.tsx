@@ -1,10 +1,14 @@
 import Breadcrumbs from "@/components/shared/dashboard/Breadcrumbs";
 import FormAddPortofolio from "@/components/shared/dashboard/portofolio/form-add-portofolio";
 import { SidebarTrigger } from "@/components/shared/dashboard/Sidebar";
-import { PencilIcon, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { getCategories } from "@/lib/api";
+import { PencilIcon, Plus, Trash2 } from "lucide-react";
+import { Suspense } from "react";
 const PortofolioPage = () => {
+	const categories = getCategories();
 	return (
-		<div className="container p-2 md:pl-2 md:pr-12">
+		<div className="p-2 md:pl-2 md:pr-12">
 			<header className="flex items-center">
 				<SidebarTrigger />
 				<Breadcrumbs
@@ -17,7 +21,15 @@ const PortofolioPage = () => {
 			<div className="mt-4 px-2">
 				<div className="flex justify-between items-center">
 					<h2 className=" text-3xl font-semibold">Portofolios</h2>
-					<FormAddPortofolio />
+					<Suspense
+						fallback={
+							<Button disabled variant="outline" className="rounded-xl">
+								Add <Plus />
+							</Button>
+						}
+					>
+						<FormAddPortofolio categories={categories} />
+					</Suspense>
 				</div>
 				<table className="w-full mt-4">
 					<tbody>
