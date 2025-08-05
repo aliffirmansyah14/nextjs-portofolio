@@ -126,7 +126,7 @@ const InformationsCard = () => {
 const CopyRight = () => {
 	return (
 		<div className="pt-3 border-t border-accent text-center">
-			<p className="text-[11px] sm:text-[12px] md:text-sm text-nowrap">
+			<p className="text-[9px] sm:text-[12px] md:text-sm text-nowrap">
 				All right reserved @alip. design inspired by @Duwi - dribble
 			</p>
 		</div>

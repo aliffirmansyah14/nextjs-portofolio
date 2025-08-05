@@ -1,7 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
-import { CategoriesType } from "./tabs";
 
 export type TechType =
 	| "Next JS"
@@ -13,7 +12,7 @@ export type ProjectType = {
 	name: string;
 	redirectUrl: string;
 	imageUrl?: string;
-	tech: TechType[];
+	tech: string[];
 	category: string;
 };
 
@@ -33,7 +32,7 @@ const Project = ({ name, redirectUrl, tech, imageUrl }: ProjectProps) => {
 			<div className=" absolute inset-0 bg-black/40 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
 				<div className="size-full flex flex-col justify-end">
 					<Link href={redirectUrl ?? "/"} className="px-6 py-4 space-y-3">
-						<div className="flex gap-x-1">
+						<div className="flex gap-1 flex-wrap">
 							{tech.map(t => (
 								<Badge
 									key={t}

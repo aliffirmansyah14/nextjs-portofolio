@@ -70,6 +70,8 @@ model Project{
 	tech 				String[]
 	categoryId 		String
 	category 		Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+	createdAt		DateTime @default(now())
+	updateAt			DateTime @updatedAt
 
 	@@map("projects")
 }
@@ -78,6 +80,8 @@ model Category{
 	id			 	String @id @default(cuid())
 	name 			String 
 	projects 	Project[]
+	createdAt		DateTime @default(now())
+	updateAt			DateTime @updatedAt
 
 	@@unique([name])
 	@@map("category")

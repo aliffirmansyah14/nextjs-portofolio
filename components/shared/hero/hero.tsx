@@ -10,9 +10,9 @@ const Hero = () => {
 			<div className="flex flex-col gap-y-28 ">
 				<h1 className="animate-fade-in max-w-2xl mx-auto text-3xl md:text-5xl lg:text-6xl font-semibold md:leading-none tracking-tighter text-center">
 					<span className="text-muted-foreground  font-light">
-						I’m a web developer specialising in{" "}
+						I’m a web developer specialising in
 					</span>
-					Frontend <span className="text-muted-foreground font-light">and</span>{" "}
+					Frontend <span className="text-muted-foreground font-light">and</span>
 					Website design
 				</h1>
 

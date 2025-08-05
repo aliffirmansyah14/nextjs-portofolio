@@ -5,7 +5,7 @@ import { cache } from "react";
 
 const projects: ProjectType[] = [
 	{
-		tech: ["Next JS", "Tailwind CSS"],
+		tech: ["Next JS", "Tailwind CSS", "React JS", "Laravel", "Supabase"],
 		imageUrl: "https://placehold.co/400x200",
 		name: "React-js chatting",
 		redirectUrl: "https://github.com/aliffirmansyah14/",
@@ -57,9 +57,9 @@ export const getProjects = async (delay: number = 1000) => {
 
 export const getCategories = cache(async () => {
 	try {
-		await new Promise(resolve => {
-			setTimeout(resolve, 300);
-		});
+		// await new Promise(resolve => {
+		// 	setTimeout(resolve, 300);
+		// });
 		return await prisma.category.findMany({
 			select: {
 				id: true,

@@ -10,11 +10,13 @@ import {
 } from "@/components/ui/select";
 const SelectCategory = ({
 	categories,
+	defaultValue,
 }: {
 	categories: { id: string; name: string }[];
+	defaultValue?: string | undefined;
 }) => {
 	return (
-		<Select name="category">
+		<Select name="category" defaultValue={defaultValue}>
 			<SelectTrigger className="w-full">
 				<SelectValue placeholder="Select a category" />
 			</SelectTrigger>

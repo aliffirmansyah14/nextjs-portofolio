@@ -1,10 +1,43 @@
+"use client";
 import Section from "@/components/shared/layout/section-layout";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 const AboutMe = () => {
+	const ref = useRef<HTMLDivElement | null>(null);
+	const [inView, setInView] = useState<boolean>(false);
+
+	useEffect(() => {
+		if (!ref.current || inView) return;
+		const observer = new IntersectionObserver(
+			entries => {
+				const [entry] = entries;
+				setInView(entry.isIntersecting);
+			},
+			{
+				root: null,
+				threshold: 0.2,
+			}
+		);
+		observer.observe(ref.current);
+
+		return () => {
+			if (ref.current) observer.unobserve(ref.current);
+		};
+	}, [ref, inView]);
+
 	return (
 		<Section id="about">
-			<div className="mt-12 grid md:grid-cols-2 items-center gap-x-24">
+			<div
+				className={cn(
+					"mt-12 grid md:grid-cols-2 items-center gap-x-24 transition-all duration-1000 md:translate-y-40 md:opacity-0",
+					{
+						"md:translate-y-0 md:opacity-100": inView,
+					}
+				)}
+				ref={ref}
+			>
 				<div className="flex-1">
 					<p className="text-muted-foreground tracking-tight font-mono">
 						A BIT ABOUT ME

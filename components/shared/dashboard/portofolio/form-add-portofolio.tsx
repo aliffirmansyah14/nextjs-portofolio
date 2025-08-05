@@ -27,7 +27,6 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 		createPortofolio,
 		undefined
 	);
-	// console.log(state?.error);
 
 	return (
 		<Dialog>
@@ -41,7 +40,7 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 					<DialogHeader>
 						<DialogTitle>Add Portofolio</DialogTitle>
 						<DialogDescription className="text-muted-foreground text-sm">
-							create data portofolio{" "}
+							Create data portofolio
 						</DialogDescription>
 					</DialogHeader>
 					<div className="grid gap-4">
@@ -52,16 +51,19 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 								id="name"
 								name="name"
 								placeholder="project wip"
-								// defaultValue={(state?.field["name"] as string) ?? ""}
+								defaultValue={(state?.field["name"] as string) ?? ""}
 								required
 							/>
-							{/* {state?.error?.name && (
+							{state?.error?.name && (
 								<p className="text-red-500">{state.error.name} </p>
-							)} */}
+							)}
 						</div>
 						<div className="grid gap-3">
 							<Label htmlFor="category">Category</Label>
-							<SelectCategory categories={allCategories} />
+							<SelectCategory
+								defaultValue={state?.field["category"] as string}
+								categories={allCategories}
+							/>
 						</div>
 						<div className="grid gap-3">
 							<Label htmlFor="tech">Tech stack</Label>
@@ -71,7 +73,29 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 								name="tech"
 								placeholder="react js"
 								required
+								defaultValue={state?.field["tech"] as string}
 							/>
+							{state?.error?.tech && (
+								<p className="text-red-500">
+									{state.error.tech.map(t => (t += " "))}
+								</p>
+							)}
+						</div>
+						<div className="grid gap-4">
+							<div className="grid gap-3">
+								<Label htmlFor="redirectUrl">Project Url</Label>
+								<Input
+									type="text"
+									id="redirectUrl"
+									name="redirect"
+									placeholder="https://github....."
+									defaultValue={(state?.field["redirect"] as string) ?? ""}
+									required
+								/>
+								{state?.error?.redirectUrl && (
+									<p className="text-red-500">{state.error.redirectUrl} </p>
+								)}
+							</div>
 						</div>
 						<div className="grid gap-3">
 							<Label htmlFor="image">Tech stack</Label>
@@ -82,6 +106,9 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 								accept="image/*"
 								required
 							/>
+							{state?.error?.image && (
+								<p className="text-red-500 text-xs">{state.error.image} </p>
+							)}
 						</div>
 					</div>
 					<DialogFooter>

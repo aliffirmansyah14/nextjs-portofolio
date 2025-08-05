@@ -6,6 +6,7 @@ import Link from "next/link";
 import { useState } from "react";
 import ProgressLink from "./progress-link";
 import { useSession } from "next-auth/react";
+import clsx from "clsx";
 
 const links = [
 	{ label: "HOME", href: "#home", sectionId: "home" },
@@ -99,17 +100,19 @@ type NavbarLinkProps = {
 const NavbarLink = ({ href, label, active }: NavbarLinkProps) => {
 	return (
 		<li
-			className={cn(
+			className={clsx(
 				"relative before:content-[''] before:opacity-0 before:w-2 before:h-0.5 before:absolute before:-bottom-1 before:bg-neutral-100 before:rounded-lg before:-translate-1/2 before:left-1/2 transition-opacity",
-				active ? "before:opacity-100" : ""
+				{
+					"before:opacity-100": active,
+				}
 			)}
 		>
 			<Link
 				href={href}
-				className={cn(
-					"capitalize font-semibold text-sm transition-all",
-					active ? "text-primary-foreground" : "text-primary-foreground/60"
-				)}
+				className={clsx("capitalize font-semibold text-sm transition-all", {
+					"text-primary-foreground": active,
+					"text-primary-foreground/60": !active,
+				})}
 			>
 				{label}
 			</Link>

@@ -56,13 +56,13 @@ const listSkill: skill[] = [
 
 const Skills = () => {
 	return (
-		<div className="w-full max-w-2xl mx-auto relative flex gap-x-4 overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)] group">
+		<div className="w-full max-w-2xl mx-auto relative flex gap-x-4 overflow-hidden [mask-image:_linear-gradient(to_right,transparent_0,_black_128px,_black_calc(100%-200px),transparent_100%)] opacity-70">
 			{[1, 2].map(num => {
 				return (
 					<div
 						key={num}
 						className={cn(
-							"whitespace-nowrap flex gap-x-4 group-hover:paused running",
+							"whitespace-nowrap flex gap-x-4 pointer-events-none",
 							num === 1
 								? "animate-marquee"
 								: "animate-marquee-2 ms-4 absolute top-0"
@@ -73,20 +73,20 @@ const Skills = () => {
 							return (
 								<div
 									key={skill.name}
-									className="bg-secondary px-3 py-2 rounded-xl flex gap-x-2 items-center"
+									className="px-3 py-2 rounded-xl flex gap-x-2 items-center"
 								>
-									<div className="dark:invert-100 size-[25px] relative">
+									<div className="dark:invert-100 size-[25px] relative pointer-events-none">
 										<Image
 											src={skill?.imageUrl || "/nextjs.svg"}
 											alt="icon-image"
 											className="size-full"
 											sizes="(max-width: 700px) 100%,80% "
 											priority
-											quality={75}
+											quality={90}
 											fill
 										/>
 									</div>
-									<p className="capitalize text-xs">{skill.name}</p>
+									<p className="capitalize font-semibold">{skill.name}</p>
 								</div>
 							);
 						})}

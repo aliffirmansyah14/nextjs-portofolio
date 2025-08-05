@@ -9,6 +9,8 @@ import {
 import { prisma } from "./prisma";
 import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
+import { put } from "@vercel/blob";
+import { revalidatePath } from "next/cache";
 
 export const authenticate = async (prevState: unknown, formData: FormData) => {
 	const parsedFormData = loginFormSchema.safeParse(
@@ -86,6 +88,7 @@ export const createPortofolio = async (
 		name: formData.get("name") as string,
 		category: formData.get("category") as string,
 		image: formData.get("image") as File,
+		redirectUrl: formData.get("redirect") as string,
 		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
 	};
 	const parsedFormData = createPortofolioFormSchema.safeParse(createFormdata);
@@ -96,5 +99,26 @@ export const createPortofolio = async (
 		};
 	}
 
-	console.log(parsedFormData);
+	const { url } = await put(
+		`${parsedFormData.data.image.name}-${
+			new Date().toISOString().split("T")[0]
+		}`,
+		parsedFormData.data.image,
+		{
+			access: "public",
+			allowOverwrite: true,
+		}
+	);
+	console.log(url);
+	const createdPortofolio = await prisma.project.create({
+		data: {
+			name: createFormdata.name,
+			redirectUrl: createFormdata.redirectUrl,
+			categoryId: createFormdata.category,
+			imageUrl: url,
+			tech: createFormdata.tech,
+		},
+	});
+	console.log(createdPortofolio);
+	revalidatePath("/dashboard/portofolio");
 };

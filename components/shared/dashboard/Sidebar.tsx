@@ -128,6 +128,7 @@ export const SidebarTrigger = ({
 
 const UsernameButton = () => {
 	const { data: session } = useSession();
+
 	const [isLoading, setIsloading] = useState<boolean>(false);
 
 	const handleOnClickLogout = async (
@@ -154,7 +155,7 @@ const UsernameButton = () => {
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<footer className="mt-auto py-1 px-2 flex justify-between hover:bg-primary/30 rounded ">
-					<span>{session?.user.name}</span>
+					<span>{session?.user.name ? session.user.name : "Loading..."}</span>
 					<ChevronUp />
 				</footer>
 			</DropdownMenuTrigger>

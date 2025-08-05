@@ -9,13 +9,14 @@ export const createPortofolioFormSchema = z.object({
 	name: z.string().min(1, "At least 1 character"),
 	category: z.string().min(1, "required"),
 	tech: z.array(z.string()),
+	redirectUrl: z.string(),
 	image: z
 		.instanceof(File)
+		.refine(file => file.size <= 1000000, {
+			message: "Image must less then 1MB",
+		})
 		.refine(file => file.type.startsWith("image/"), {
 			message: "Invalid fie type",
-		})
-		.refine(file => file.size < 5000000, {
-			message: "Image must less then 5MB",
 		}),
 });
 
