@@ -13,13 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { DialogDescription } from "@radix-ui/react-dialog";
-import {
-	startTransition,
-	use,
-	useActionState,
-	useEffect,
-	useState,
-} from "react";
+import { startTransition, use, useEffect, useState } from "react";
 import SelectCategory from "./select-category";
 import { useActionPortofolio } from "@/store/action-portofolio";
 import Image from "next/image";
@@ -48,7 +42,6 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 		<>
 			<Dialog>
 				<DialogOverlay />
-
 				<DialogTrigger asChild>
 					<button
 						className="hidden pointer-events-none"
@@ -59,6 +52,7 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 					className={clsx(
 						"sm:max-w-[425px] rounded-x flex flex-col max-h-[95%] sm:max-h-max"
 					)}
+					showCloseButton={false}
 				>
 					<form
 						action={formData => {

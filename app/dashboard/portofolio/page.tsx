@@ -1,5 +1,6 @@
 import Breadcrumbs from "@/components/shared/dashboard/Breadcrumbs";
 import FormAddPortofolio from "@/components/shared/dashboard/portofolio/form-add-portofolio";
+import FormDeletePortofolio from "@/components/shared/dashboard/portofolio/form-delete-portofolio";
 import FormEditPortofolio from "@/components/shared/dashboard/portofolio/form-edit-portofolio";
 import { SidebarTrigger } from "@/components/shared/dashboard/Sidebar";
 import TablePortofolio from "@/components/shared/table-portofolio";
@@ -45,6 +46,7 @@ const PortofolioPage = () => {
 				</div>
 			</div>
 			<FormEditPortofolio categories={categories} />
+			<FormDeletePortofolio />
 		</div>
 	);
 };

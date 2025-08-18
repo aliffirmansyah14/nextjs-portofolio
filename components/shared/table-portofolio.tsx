@@ -23,6 +23,11 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 		setActionIdPortofolio(portofolio.id);
 		document.getElementById("trigger-edit-portofolio")?.click();
 	};
+	const handleClickDeleteButton = (id: string) => {
+		setActionIdPortofolio(id);
+		document.getElementById("trigger-delete-portofolio")?.click();
+	};
+
 	if (allPortofolios !== undefined && allPortofolios.length > 0) {
 		const columns = Object.keys(allPortofolios[0]);
 		columns.shift();
@@ -80,7 +85,14 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 								>
 									<PencilIcon />
 								</button>
-								<button className="rounded-full p-2 hover:bg-secondary">
+
+								<button
+									className="rounded-full p-2 hover:bg-secondary"
+									onClick={e => {
+										e.preventDefault();
+										handleClickDeleteButton(portofolio.id);
+									}}
+								>
 									<Trash2 />
 								</button>
 							</td>

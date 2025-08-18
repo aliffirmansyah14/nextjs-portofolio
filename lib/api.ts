@@ -3,7 +3,11 @@ import { ProjectType } from "@/components/shared/portofolio/project";
 import { prisma } from "./prisma";
 import { cache } from "react";
 import { selectedRowProjects } from "./schema";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
+import {
+	DefaultArgs,
+	PrismaClientKnownRequestError,
+} from "@prisma/client/runtime/library";
+import { Prisma } from "@prisma/client";
 
 const projects: ProjectType[] = [
 	{
@@ -93,3 +97,21 @@ export const getPortofolios = cache(async () => {
 		// }
 	}
 });
+
+export const getPortofolioById = async (
+	idProject: string,
+	selecttedProject: Prisma.ProjectSelect<DefaultArgs> | null | undefined
+) => {
+	try {
+		return await prisma.project.findUnique({
+			select: {
+				...selecttedProject,
+			},
+			where: {
+				id: idProject,
+			},
+		});
+	} catch (error) {
+		throw new Error("Error di getportofolio by id");
+	}
+};

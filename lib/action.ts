@@ -13,6 +13,7 @@ import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
 import { put, del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
+import { getPortofolioById } from "./api";
 
 export const authenticate = async (prevState: unknown, formData: FormData) => {
 	const parsedFormData = loginFormSchema.safeParse(
@@ -128,7 +129,7 @@ export const createPortofolio = async (
 			tech: createFormdata.tech,
 		},
 	});
-	console.log(createdPortofolio);
+
 	revalidatePath("/dashboard/portofolio");
 };
 
@@ -201,4 +202,20 @@ export const editPortofolio = async (
 		});
 	}
 	revalidatePath("/dashboard/portofolio");
+};
+
+export const deletePortofolioById = async (id: string) => {
+	const portofolio = await getPortofolioById(id, { imageUrl: true });
+	try {
+		if (!id || !portofolio || !portofolio?.imageUrl) return;
+		await del(portofolio.imageUrl);
+		await prisma.project.delete({
+			where: {
+				id,
+			},
+		});
+		revalidatePath("/dashboard/portofolio");
+	} catch (error) {
+		console.log("error di delete portofolio api.ts ");
+	}
 };
