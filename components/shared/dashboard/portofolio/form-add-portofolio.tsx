@@ -4,14 +4,15 @@ import {
 	Dialog,
 	DialogClose,
 	DialogContent,
+	DialogDescription,
 	DialogFooter,
 	DialogHeader,
+	DialogOverlay,
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { DialogDescription } from "@radix-ui/react-dialog";
 import { Plus } from "lucide-react";
 import { use, useActionState } from "react";
 import { createPortofolio } from "@/lib/action";
@@ -30,11 +31,13 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 
 	return (
 		<Dialog>
+			<DialogOverlay />
 			<DialogTrigger asChild>
 				<Button variant="outline" className="rounded-xl">
 					Add <Plus />
 				</Button>
 			</DialogTrigger>
+
 			<DialogContent className="sm:max-w-[425px] rounded-xl">
 				<form action={formAction} className="space-y-4">
 					<DialogHeader>

@@ -4,12 +4,14 @@ import { signIn } from "@/auth";
 import {
 	createPortofolioFormSchema,
 	createPortofolioFormType,
+	editPortofolioFormSchema,
+	editPortofolioWithFileFormSchema,
 	loginFormSchema,
 } from "./schema";
 import { prisma } from "./prisma";
 import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
-import { put } from "@vercel/blob";
+import { put, del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
 
 export const authenticate = async (prevState: unknown, formData: FormData) => {
@@ -24,6 +26,13 @@ export const authenticate = async (prevState: unknown, formData: FormData) => {
 	}
 
 	try {
+		// const hashPassword = await bcrypt.hash(parsedFormData.data.password, 10);
+		// await prisma.user.create({
+		// 	data: {
+		// 		email: parsedFormData.data.email,
+		// 		password: hashPassword,
+		// 	},
+		// });
 		await signIn("credentials", {
 			...Object.fromEntries(formData.entries()),
 			redirectTo: "/dashboard",
@@ -109,7 +118,7 @@ export const createPortofolio = async (
 			allowOverwrite: true,
 		}
 	);
-	console.log(url);
+
 	const createdPortofolio = await prisma.project.create({
 		data: {
 			name: createFormdata.name,
@@ -120,5 +129,76 @@ export const createPortofolio = async (
 		},
 	});
 	console.log(createdPortofolio);
+	revalidatePath("/dashboard/portofolio");
+};
+
+export const editPortofolio = async (
+	idProject: string | undefined | null,
+	prevState: unknown,
+	formData: FormData
+) => {
+	if (!idProject) return;
+	const image = formData.get("image");
+	const imageName = formData.get("imageName") as string;
+
+	const isImageFile = image instanceof File;
+
+	const editFormData = {
+		name: formData.get("name") as string,
+		category: formData.get("category") as string,
+		redirectUrl: formData.get("redirect") as string,
+		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
+		image: isImageFile ? (image as File) : (image as string),
+	};
+	const schema = isImageFile
+		? editPortofolioWithFileFormSchema
+		: editPortofolioFormSchema;
+
+	const parsedFormData = schema.safeParse(editFormData);
+
+	if (!parsedFormData.success) {
+		return {
+			field: Object.fromEntries(formData.entries()),
+			error: parsedFormData.error.flatten().fieldErrors,
+		};
+	}
+	if (!isImageFile) {
+		await prisma.project.update({
+			data: {
+				name: parsedFormData.data.name,
+				categoryId: parsedFormData.data.category,
+				tech: parsedFormData.data.tech,
+				redirectUrl: parsedFormData.data.redirectUrl,
+			},
+			where: {
+				id: idProject,
+			},
+		});
+	} else {
+		await del(imageName);
+		const newImage = parsedFormData.data.image as File;
+		const { url } = await put(
+			`${newImage.name.split(".")[0]}-${
+				new Date().toISOString().split("T")[0]
+			}`,
+			newImage,
+			{
+				access: "public",
+				allowOverwrite: true,
+			}
+		);
+		await prisma.project.update({
+			data: {
+				name: parsedFormData.data.name,
+				categoryId: parsedFormData.data.category,
+				tech: parsedFormData.data.tech,
+				redirectUrl: parsedFormData.data.redirectUrl,
+				imageUrl: url,
+			},
+			where: {
+				id: idProject,
+			},
+		});
+	}
 	revalidatePath("/dashboard/portofolio");
 };

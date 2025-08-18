@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
 				hostname: "placehold.co",
 				pathname: "**",
 			},
-			new URL("https://my-store-id.public.blob.vercel-storage.com/**"),
+			new URL("https://vy6h6fhwkpvikfqj.public.blob.vercel-storage.com/**"),
 		],
 		dangerouslyAllowSVG: true,
 	},

@@ -72,7 +72,7 @@ const LoginForm = () => {
 				aria-atomic="true"
 			>
 				{state?.message && (
-					<p className="text-sm text-red-500">{state.message}</p>
+					<p className="text-xs text-red-500">{state.message}</p>
 				)}
 			</div>
 		</div>

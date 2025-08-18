@@ -92,7 +92,7 @@ const OverlaySiderbar = () => {
 		<div
 			className={`${
 				isOpen ? "fixed" : "hidden"
-			} md:hidden md:pointer-events-none z-40 top-0 bottom-0 w-full bg-black/70`}
+			} md:hidden md:pointer-events-none z-30 top-0 bottom-0 w-full bg-black/70`}
 			onClick={() => setIsOpen(prev => !prev)}
 		></div>
 	);

@@ -2,6 +2,8 @@
 import { ProjectType } from "@/components/shared/portofolio/project";
 import { prisma } from "./prisma";
 import { cache } from "react";
+import { selectedRowProjects } from "./schema";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
 const projects: ProjectType[] = [
 	{
@@ -69,5 +71,25 @@ export const getCategories = cache(async () => {
 	} catch (error) {
 		console.log(`error get categories : ${error}`);
 		return [];
+	}
+});
+
+export const getPortofolios = cache(async () => {
+	try {
+		return await prisma.project.findMany({
+			select: { ...selectedRowProjects },
+		});
+	} catch (error) {
+		if (error instanceof Error) {
+			switch (error.name) {
+				case "PrismaClientKnownRequestError":
+					console.log((error as PrismaClientKnownRequestError).code);
+				default:
+					console.log(error.name);
+			}
+		}
+		// if (error instanceof PrismaClientKnownRequestError) {
+		// 	throw new Error("error di get portofolios" + error.message);
+		// }
 	}
 });

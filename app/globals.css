@@ -247,3 +247,27 @@
 		@apply bg-gradient-to-r via-0% via-[#BC3CD8] to-[#C54B8C];
 	}
 }
+
+@utility scroll-w-sm {
+	&::-webkit-scrollbar {
+		width: 8px;
+	}
+}
+@utility scroll-h-sm {
+	&::-webkit-scrollbar {
+		height: 8px;
+		width: 100%;
+	}
+}
+
+@utility scroll-track-dark {
+	&::-webkit-scrollbar-track {
+		background: var(--color-neutral-700);
+	}
+	&::-webkit-scrollbar-thumb {
+		border-radius: 12px;
+		background: var(--color-neutral-400);
+	}
+}
+/* @utility scroll-thumb-dark {
+} */
