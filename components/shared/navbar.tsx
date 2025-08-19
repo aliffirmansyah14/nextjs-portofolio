@@ -49,6 +49,7 @@ const Navbar = () => {
 
 			<NavigasiMenuMobile
 				onClick={handleOnClickMenu}
+				isLogin={session?.user !== undefined}
 				className={`${
 					isMenuVisible ? "z-10 opacity-100" : "opacity-0 pointer-events-none"
 				}`}
@@ -146,12 +147,14 @@ const MenuButton = ({
 
 type NavigasiMenuMobileProps = {
 	onClick?: () => void;
+	isLogin: boolean;
 	className: string;
 };
 
 const NavigasiMenuMobile = ({
 	onClick,
 	className,
+	isLogin,
 }: NavigasiMenuMobileProps) => {
 	return (
 		<nav
@@ -181,6 +184,14 @@ const NavigasiMenuMobile = ({
 						</Link>
 					);
 				})}
+				{isLogin && (
+					<ProgressLink
+						href="/dashboard"
+						className="border-b block  px-2 py-1 capitalize hover:bg-accent active:bg-accent"
+					>
+						Dashboard
+					</ProgressLink>
+				)}
 			</ul>
 		</nav>
 	);

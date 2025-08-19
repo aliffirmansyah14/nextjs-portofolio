@@ -50,12 +50,12 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 							className="border border-r-0 border-l-0 border-secondary t"
 						>
 							<td className="mt-1 px-1 py-2 ">
-								<p className="capitalize text-xs sm:text-base font-normal leading-none w-[120px] md:w-fit">
+								<p className="capitalize text-sm sm:text-base font-normal leading-none w-[120px] md:w-fit">
 									{portofolio.name}
 								</p>
 							</td>
 							<td className="px-1 py-2 ">
-								<p className="capitalize text-xs sm:text-base font-normal leading-none">
+								<p className="capitalize text-sm sm:text-base font-normal leading-none">
 									{portofolio.category.name}
 								</p>
 							</td>
@@ -71,7 +71,7 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 								<UrlRender url={portofolio.redirectUrl} />
 							</td>
 							<td className="px-1 py-2 ">
-								<p className=" text-xs sm:text-base font-normal leading-none">
+								<p className=" text-sm sm:text-base font-normal leading-none">
 									{new Date(portofolio.createdAt).toISOString().split("T")[0]}
 								</p>
 							</td>
@@ -114,7 +114,7 @@ export default TablePortofolio;
 const UrlRender = ({ url }: { url?: string | null }) => {
 	return (
 		<>
-			<p className="text-xs sm:text-base font-normal leading-none ">
+			<p className="text-sm sm:text-base font-normal leading-none ">
 				{url ? (
 					<Badge variant={"default"} className="rounded-full">
 						true

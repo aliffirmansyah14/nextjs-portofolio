@@ -165,7 +165,7 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 												defaultValue={
 													(state?.field["image"] as string) ||
 													actionPortofolio?.imageUrl ||
-													""
+													"tidak ada foto"
 												}
 												disabled
 											/>
@@ -175,7 +175,7 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 												defaultValue={
 													(state?.field["image"] as string) ||
 													actionPortofolio?.imageUrl ||
-													""
+													"tidak ada foto"
 												}
 												hidden
 											/>
@@ -208,7 +208,6 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 												id="image"
 												name="image"
 												accept="image/*"
-												required
 											/>
 											<Button
 												type="button"

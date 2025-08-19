@@ -2,13 +2,13 @@ import Section from "@/components/shared/layout/section-layout";
 import HeaderSection from "../header-section";
 import { Suspense } from "react";
 import ProjectsSkeleton from "./project-skeleton";
-import { getCategories, getProjects } from "@/lib/api";
+import { getCategories, getPortofolios } from "@/lib/api";
 import Projects from "./projects";
 
 const Portofolio = () => {
 	// provide promise to client component
 	const categories = getCategories();
-	const projects = getProjects(2000);
+	const projects = getPortofolios();
 	// const [categories, projects] = Promise.all([
 	// 	getCategories(),
 	// 	getProjects(2000),

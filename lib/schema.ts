@@ -1,5 +1,15 @@
 import { z } from "zod";
 
+export const imageZod = z
+	.instanceof(File)
+	.refine(file => file.size <= 1000000, {
+		message: "Image must less then 1MB",
+	})
+	.refine(file => file.size > 0 && file.type.startsWith("image/"), {
+		message: "Invalid fie type",
+	})
+	.optional();
+
 export const loginFormSchema = z.object({
 	email: z.string().email("Invalid email address"),
 	password: z.string().min(1, "At Least 1 character"),
@@ -10,28 +20,12 @@ export const createPortofolioFormSchema = z.object({
 	category: z.string().min(1, "required"),
 	tech: z.array(z.string()),
 	redirectUrl: z.string(),
-	image: z
-		.instanceof(File)
-		.refine(file => file.size <= 1000000, {
-			message: "Image must less then 1MB",
-		})
-		.refine(file => file.type.startsWith("image/"), {
-			message: "Invalid fie type",
-		}),
+	image: imageZod,
 });
 
 export type createPortofolioFormType = z.infer<
 	typeof createPortofolioFormSchema
 >;
-
-export const imageZod = z
-	.instanceof(File)
-	.refine(file => file.size <= 1000000, {
-		message: "Image must less then 1MB",
-	})
-	.refine(file => file.type.startsWith("image/"), {
-		message: "Invalid fie type",
-	});
 
 export const editPortofolioWithFileFormSchema = z.object({
 	name: z.string().min(1, "At least 1 character"),
@@ -49,7 +43,7 @@ export const editPortofolioFormSchema = z.object({
 	category: z.string().min(1, "required"),
 	tech: z.array(z.string()),
 	redirectUrl: z.string(),
-	image: z.string().min(1, "requuired"),
+	image: z.string().optional(),
 });
 
 export type editPortofolioType = z.infer<typeof editPortofolioFormSchema>;

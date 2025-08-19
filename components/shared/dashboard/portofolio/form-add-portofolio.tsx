@@ -102,13 +102,7 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 						</div>
 						<div className="grid gap-3">
 							<Label htmlFor="image">Tech stack</Label>
-							<Input
-								type="file"
-								id="image"
-								name="image"
-								accept="image/*"
-								required
-							/>
+							<Input type="file" id="image" name="image" accept="image/*" />
 							{state?.error?.image && (
 								<p className="text-red-500 text-xs">{state.error.image} </p>
 							)}

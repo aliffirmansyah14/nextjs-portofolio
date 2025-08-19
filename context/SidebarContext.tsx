@@ -1,6 +1,5 @@
 "use client";
-import { isDesktopUserAgent } from "@/lib/utils";
-import { createContext, use, useState } from "react";
+import { createContext, use, useLayoutEffect, useState } from "react";
 
 type SidebarContextType = {
 	isOpen: boolean;
@@ -18,11 +17,28 @@ const useSidebar = () => {
 };
 
 const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
-	const [isOpen, setIsOpen] = useState<boolean>(isDesktopUserAgent() ?? false);
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	useLayoutEffect(() => {
+		function isDesktopUserAgent() {
+			const userAgent = navigator.userAgent;
+			// Common mobile/tablet indicators
+			const mobileRegex =
+				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+			return !mobileRegex.test(userAgent);
+		}
+		setIsOpen(isDesktopUserAgent());
+	}, []);
 
 	return (
 		<SidebarContext value={{ isOpen, setIsOpen }}>{children}</SidebarContext>
 	);
 };
+// export function isDesktopUserAgent() {
+// 	const userAgent = navigator.userAgent;
+// 	// Common mobile/tablet indicators
+// 	const mobileRegex =
+// 		/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
+// 	return !mobileRegex.test(userAgent);
+// }
 
 export { useSidebar, SidebarProvider };

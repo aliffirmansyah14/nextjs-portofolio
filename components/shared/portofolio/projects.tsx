@@ -1,10 +1,11 @@
 "use client";
 import { use, useState } from "react";
-import Project, { ProjectType } from "./project";
-import Tabs, { CategoriesType } from "./tabs";
+import Tabs from "./tabs";
+import { portofoliosType } from "../table-portofolio";
+import Project from "./project";
 
 type ProjectsProps = {
-	projects: Promise<ProjectType[]>;
+	projects: Promise<portofoliosType[] | undefined>;
 	categories: Promise<{ name: string; id: string }[]>;
 };
 
@@ -18,11 +19,13 @@ const Projects = ({ projects, categories }: ProjectsProps) => {
 	};
 
 	const filteredProjects =
-		isTabActive === "all"
-			? allProjects
-			: allProjects.filter(
-					p => p.category.toLowerCase() === isTabActive.toLowerCase()
-			  );
+		allProjects !== undefined
+			? allProjects.length > 0 && isTabActive === "all"
+				? allProjects
+				: allProjects.filter(
+						p => p.category.name.toLowerCase() === isTabActive.toLowerCase()
+				  )
+			: [];
 
 	return (
 		<div>
@@ -32,7 +35,7 @@ const Projects = ({ projects, categories }: ProjectsProps) => {
 				isActive={isTabActive}
 			/>
 			<div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-				{filteredProjects.length > 0 ? (
+				{filteredProjects && filteredProjects.length > 0 ? (
 					filteredProjects.map((project, i) => {
 						return <Project key={i} {...project} />;
 					})

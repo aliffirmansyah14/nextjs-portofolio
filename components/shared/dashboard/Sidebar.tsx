@@ -162,8 +162,6 @@ const UsernameButton = () => {
 			<DropdownMenuContent className="w-56" align="end">
 				<DropdownMenuLabel>My account</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem>Team</DropdownMenuItem>
-				<DropdownMenuSeparator />
 				<DropdownMenuItem>
 					<ProgressLink href="/" className="w-full cursor-pointer">
 						Home page

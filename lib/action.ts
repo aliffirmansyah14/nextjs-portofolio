@@ -101,6 +101,9 @@ export const createPortofolio = async (
 		redirectUrl: formData.get("redirect") as string,
 		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
 	};
+	if (createFormdata.image?.size === 0) {
+		delete createFormdata["image"];
+	}
 	const parsedFormData = createPortofolioFormSchema.safeParse(createFormdata);
 	if (!parsedFormData.success) {
 		return {
@@ -108,27 +111,36 @@ export const createPortofolio = async (
 			error: parsedFormData.error.flatten().fieldErrors,
 		};
 	}
-
-	const { url } = await put(
-		`${parsedFormData.data.image.name}-${
-			new Date().toISOString().split("T")[0]
-		}`,
-		parsedFormData.data.image,
-		{
-			access: "public",
-			allowOverwrite: true,
-		}
-	);
-
-	const createdPortofolio = await prisma.project.create({
-		data: {
-			name: createFormdata.name,
-			redirectUrl: createFormdata.redirectUrl,
-			categoryId: createFormdata.category,
-			imageUrl: url,
-			tech: createFormdata.tech,
-		},
-	});
+	if (parsedFormData.data.image) {
+		const { url } = await put(
+			`${parsedFormData.data.image.name}-${
+				new Date().toISOString().split("T")[0]
+			}`,
+			parsedFormData.data.image,
+			{
+				access: "public",
+				allowOverwrite: true,
+			}
+		);
+		await prisma.project.create({
+			data: {
+				name: createFormdata.name,
+				redirectUrl: createFormdata.redirectUrl,
+				categoryId: createFormdata.category,
+				imageUrl: url,
+				tech: createFormdata.tech,
+			},
+		});
+	} else {
+		await prisma.project.create({
+			data: {
+				name: createFormdata.name,
+				redirectUrl: createFormdata.redirectUrl,
+				categoryId: createFormdata.category,
+				tech: createFormdata.tech,
+			},
+		});
+	}
 
 	revalidatePath("/dashboard/portofolio");
 };
@@ -149,11 +161,13 @@ export const editPortofolio = async (
 		category: formData.get("category") as string,
 		redirectUrl: formData.get("redirect") as string,
 		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
-		image: isImageFile ? (image as File) : (image as string),
+		image: isImageFile ? (image as File) : (image as string) || undefined,
 	};
 	const schema = isImageFile
 		? editPortofolioWithFileFormSchema
 		: editPortofolioFormSchema;
+
+	if (isImageFile && (image as File).size === 0) delete editFormData["image"];
 
 	const parsedFormData = schema.safeParse(editFormData);
 
@@ -176,30 +190,45 @@ export const editPortofolio = async (
 			},
 		});
 	} else {
-		await del(imageName);
+		if (imageName) await del(imageName);
 		const newImage = parsedFormData.data.image as File;
-		const { url } = await put(
-			`${newImage.name.split(".")[0]}-${
-				new Date().toISOString().split("T")[0]
-			}`,
-			newImage,
-			{
-				access: "public",
-				allowOverwrite: true,
-			}
-		);
-		await prisma.project.update({
-			data: {
-				name: parsedFormData.data.name,
-				categoryId: parsedFormData.data.category,
-				tech: parsedFormData.data.tech,
-				redirectUrl: parsedFormData.data.redirectUrl,
-				imageUrl: url,
-			},
-			where: {
-				id: idProject,
-			},
-		});
+		if (newImage) {
+			const { url } = await put(
+				`${newImage.name.split(".")[0]}-${
+					new Date().toISOString().split("T")[0]
+				}`,
+				newImage,
+				{
+					access: "public",
+					allowOverwrite: true,
+				}
+			);
+			await prisma.project.update({
+				data: {
+					name: parsedFormData.data.name,
+					categoryId: parsedFormData.data.category,
+					tech: parsedFormData.data.tech,
+					redirectUrl: parsedFormData.data.redirectUrl,
+					imageUrl: url,
+				},
+				where: {
+					id: idProject,
+				},
+			});
+		} else {
+			await prisma.project.update({
+				data: {
+					name: parsedFormData.data.name,
+					categoryId: parsedFormData.data.category,
+					tech: parsedFormData.data.tech,
+					redirectUrl: parsedFormData.data.redirectUrl,
+					imageUrl: null,
+				},
+				where: {
+					id: idProject,
+				},
+			});
+		}
 	}
 	revalidatePath("/dashboard/portofolio");
 };
@@ -207,8 +236,8 @@ export const editPortofolio = async (
 export const deletePortofolioById = async (id: string) => {
 	const portofolio = await getPortofolioById(id, { imageUrl: true });
 	try {
-		if (!id || !portofolio || !portofolio?.imageUrl) return;
-		await del(portofolio.imageUrl);
+		if (!id || !portofolio) return;
+		if (portofolio.imageUrl) await del(portofolio.imageUrl);
 		await prisma.project.delete({
 			where: {
 				id,

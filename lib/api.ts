@@ -1,5 +1,4 @@
 "use server";
-import { ProjectType } from "@/components/shared/portofolio/project";
 import { prisma } from "./prisma";
 import { cache } from "react";
 import { selectedRowProjects } from "./schema";
@@ -9,57 +8,50 @@ import {
 } from "@prisma/client/runtime/library";
 import { Prisma } from "@prisma/client";
 
-const projects: ProjectType[] = [
-	{
-		tech: ["Next JS", "Tailwind CSS", "React JS", "Laravel", "Supabase"],
-		imageUrl: "https://placehold.co/400x200",
-		name: "React-js chatting",
-		redirectUrl: "https://github.com/aliffirmansyah14/",
-		category: "reactjs",
-	},
-	{
-		tech: ["Next JS", "Tailwind CSS"],
-		imageUrl: "https://placehold.co/400x200",
-		name: "React-js chatting",
-		redirectUrl: "https://github.com/aliffirmansyah14/",
-		category: "reactjs",
-	},
-	{
-		tech: ["Next JS", "Tailwind CSS"],
-		imageUrl: "https://placehold.co/400x200",
-		name: "React-js chatting",
-		redirectUrl: "https://github.com/aliffirmansyah14/",
-		category: "reactjs",
-	},
-	{
-		tech: ["Next JS", "Tailwind CSS"],
-		imageUrl: "https://placehold.co/400x200",
-		name: "React-js chatting",
-		redirectUrl: "https://github.com/aliffirmansyah14/",
-		category: "reactjs",
-	},
-	{
-		tech: ["Next JS", "Tailwind CSS"],
-		imageUrl: "https://placehold.co/400x200",
-		name: "React-js chatting",
-		redirectUrl: "https://github.com/aliffirmansyah14/",
-		category: "html css",
-	},
-	{
-		tech: ["Next JS", "Tailwind CSS"],
-		imageUrl: "https://placehold.co/400x200",
-		name: "React-js chatting",
-		redirectUrl: "https://github.com/aliffirmansyah14/",
-		category: "laravel",
-	},
-];
-
-export const getProjects = async (delay: number = 1000) => {
-	await new Promise<typeof projects>(resolve => {
-		setTimeout(resolve, delay);
-	});
-	return projects;
-};
+// const projects: ProjectType[] = [
+// 	{
+// 		tech: ["Next JS", "Tailwind CSS", "React JS", "Laravel", "Supabase"],
+// 		imageUrl: "https://placehold.co/400x200",
+// 		name: "React-js chatting",
+// 		redirectUrl: "https://github.com/aliffirmansyah14/",
+// 		category: "reactjs",
+// 	},
+// 	{
+// 		tech: ["Next JS", "Tailwind CSS"],
+// 		imageUrl: "https://placehold.co/400x200",
+// 		name: "React-js chatting",
+// 		redirectUrl: "https://github.com/aliffirmansyah14/",
+// 		category: "reactjs",
+// 	},
+// 	{
+// 		tech: ["Next JS", "Tailwind CSS"],
+// 		imageUrl: "https://placehold.co/400x200",
+// 		name: "React-js chatting",
+// 		redirectUrl: "https://github.com/aliffirmansyah14/",
+// 		category: "reactjs",
+// 	},
+// 	{
+// 		tech: ["Next JS", "Tailwind CSS"],
+// 		imageUrl: "https://placehold.co/400x200",
+// 		name: "React-js chatting",
+// 		redirectUrl: "https://github.com/aliffirmansyah14/",
+// 		category: "reactjs",
+// 	},
+// 	{
+// 		tech: ["Next JS", "Tailwind CSS"],
+// 		imageUrl: "https://placehold.co/400x200",
+// 		name: "React-js chatting",
+// 		redirectUrl: "https://github.com/aliffirmansyah14/",
+// 		category: "html css",
+// 	},
+// 	{
+// 		tech: ["Next JS", "Tailwind CSS"],
+// 		imageUrl: "https://placehold.co/400x200",
+// 		name: "React-js chatting",
+// 		redirectUrl: "https://github.com/aliffirmansyah14/",
+// 		category: "laravel",
+// 	},
+// ];
 
 export const getCategories = cache(async () => {
 	try {
