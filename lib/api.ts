@@ -7,57 +7,10 @@ import {
 	PrismaClientKnownRequestError,
 } from "@prisma/client/runtime/library";
 import { Prisma } from "@prisma/client";
-
-// const projects: ProjectType[] = [
-// 	{
-// 		tech: ["Next JS", "Tailwind CSS", "React JS", "Laravel", "Supabase"],
-// 		imageUrl: "https://placehold.co/400x200",
-// 		name: "React-js chatting",
-// 		redirectUrl: "https://github.com/aliffirmansyah14/",
-// 		category: "reactjs",
-// 	},
-// 	{
-// 		tech: ["Next JS", "Tailwind CSS"],
-// 		imageUrl: "https://placehold.co/400x200",
-// 		name: "React-js chatting",
-// 		redirectUrl: "https://github.com/aliffirmansyah14/",
-// 		category: "reactjs",
-// 	},
-// 	{
-// 		tech: ["Next JS", "Tailwind CSS"],
-// 		imageUrl: "https://placehold.co/400x200",
-// 		name: "React-js chatting",
-// 		redirectUrl: "https://github.com/aliffirmansyah14/",
-// 		category: "reactjs",
-// 	},
-// 	{
-// 		tech: ["Next JS", "Tailwind CSS"],
-// 		imageUrl: "https://placehold.co/400x200",
-// 		name: "React-js chatting",
-// 		redirectUrl: "https://github.com/aliffirmansyah14/",
-// 		category: "reactjs",
-// 	},
-// 	{
-// 		tech: ["Next JS", "Tailwind CSS"],
-// 		imageUrl: "https://placehold.co/400x200",
-// 		name: "React-js chatting",
-// 		redirectUrl: "https://github.com/aliffirmansyah14/",
-// 		category: "html css",
-// 	},
-// 	{
-// 		tech: ["Next JS", "Tailwind CSS"],
-// 		imageUrl: "https://placehold.co/400x200",
-// 		name: "React-js chatting",
-// 		redirectUrl: "https://github.com/aliffirmansyah14/",
-// 		category: "laravel",
-// 	},
-// ];
+import { OFFSET_DATA } from "./constants";
 
 export const getCategories = cache(async () => {
 	try {
-		// await new Promise(resolve => {
-		// 	setTimeout(resolve, 300);
-		// });
 		return await prisma.category.findMany({
 			select: {
 				id: true,
@@ -70,10 +23,14 @@ export const getCategories = cache(async () => {
 	}
 });
 
-export const getPortofolios = cache(async () => {
+export const getPortofolios = cache(async (page: number = 1) => {
+	if (isNaN(page)) return;
 	try {
+		await new Promise(resolve => setTimeout(resolve, 1000));
 		return await prisma.project.findMany({
 			select: { ...selectedRowProjects },
+			take: OFFSET_DATA,
+			skip: OFFSET_DATA * (page - 1),
 		});
 	} catch (error) {
 		if (error instanceof Error) {
@@ -90,20 +47,30 @@ export const getPortofolios = cache(async () => {
 	}
 });
 
-export const getPortofolioById = async (
-	idProject: string,
-	selecttedProject: Prisma.ProjectSelect<DefaultArgs> | null | undefined
-) => {
-	try {
-		return await prisma.project.findUnique({
-			select: {
-				...selecttedProject,
-			},
-			where: {
-				id: idProject,
-			},
-		});
-	} catch (error) {
-		throw new Error("Error di getportofolio by id");
+export const getPortofolioById = cache(
+	async (
+		idProject: string,
+		selecttedProject: Prisma.ProjectSelect<DefaultArgs> | null | undefined
+	) => {
+		try {
+			return await prisma.project.findUnique({
+				select: {
+					...selecttedProject,
+				},
+				where: {
+					id: idProject,
+				},
+			});
+		} catch (error) {
+			throw new Error("Error di getportofolio by id");
+		}
 	}
-};
+);
+
+export const getCountPortofolios = cache(async () => {
+	try {
+		return await prisma.project.count();
+	} catch (error) {
+		console.log("error di count portofolios " + error);
+	}
+});

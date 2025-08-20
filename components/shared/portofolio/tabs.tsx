@@ -16,7 +16,7 @@ type TabsProps = {
 
 const Tabs = ({ categories, onClick, isActive }: TabsProps) => {
 	return (
-		<div className="flex items-center gap-2 mt-7 flex-nowrap overflow-x-auto">
+		<div className="flex-1 flex items-center gap-2 mt-7 flex-nowrap overflow-x-auto">
 			<div onClick={() => onClick("all")} className="cursor-pointer">
 				<Badge
 					variant={isActive === "all" ? "default" : "outline"}

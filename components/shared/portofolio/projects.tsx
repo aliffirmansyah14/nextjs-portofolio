@@ -3,13 +3,15 @@ import { use, useState } from "react";
 import Tabs from "./tabs";
 import { portofoliosType } from "../table-portofolio";
 import Project from "./project";
+import Pagination from "../pagination";
 
 type ProjectsProps = {
 	projects: Promise<portofoliosType[] | undefined>;
 	categories: Promise<{ name: string; id: string }[]>;
+	itemCount: Promise<number | undefined>;
 };
 
-const Projects = ({ projects, categories }: ProjectsProps) => {
+const Projects = ({ projects, categories, itemCount }: ProjectsProps) => {
 	const allProjects = use(projects);
 	const allCategories = use(categories);
 	const [isTabActive, setIsTabActive] = useState<string>("all");
@@ -29,11 +31,14 @@ const Projects = ({ projects, categories }: ProjectsProps) => {
 
 	return (
 		<div>
-			<Tabs
-				categories={allCategories}
-				onClick={handleOnClickTab}
-				isActive={isTabActive}
-			/>
+			<div className="flex flex-col gap-4 md:flex-row md:justify-between">
+				<Tabs
+					categories={allCategories}
+					onClick={handleOnClickTab}
+					isActive={isTabActive}
+				/>
+				<Pagination itemCount={itemCount} />
+			</div>
 			<div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{filteredProjects && filteredProjects.length > 0 ? (
 					filteredProjects.map((project, i) => {
