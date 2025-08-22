@@ -74,3 +74,25 @@ export const getCountPortofolios = cache(async () => {
 		console.log("error di count portofolios " + error);
 	}
 });
+
+export const getCountCategoriesWithCountProjects = cache(async () => {
+	try {
+		return await prisma.category.findMany({
+			select: {
+				name: true,
+				_count: {
+					select: {
+						projects: true,
+					},
+				},
+			},
+			orderBy: {
+				projects: {
+					_count: "desc",
+				},
+			},
+		});
+	} catch (error) {
+		console.log("error di count categories " + error);
+	}
+});

@@ -32,74 +32,79 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 		const columns = Object.keys(allPortofolios[0]);
 		columns.shift();
 		return (
-			<table className="w-full mt-4">
-				<thead>
-					<tr>
-						{columns.map(col => (
-							<th key={col} className="capitalize text-sm md:text-base">
-								{col}
-							</th>
-						))}
-						<th>Action</th>
-					</tr>
-				</thead>
-				<tbody>
-					{allPortofolios.map(portofolio => (
-						<tr
-							key={portofolio.name}
-							className="border border-r-0 border-l-0 border-secondary t"
-						>
-							<td className="mt-1 px-1 py-2 ">
-								<p className="capitalize text-sm sm:text-base font-normal leading-none w-[120px] md:w-fit">
-									{portofolio.name}
-								</p>
-							</td>
-							<td className="px-1 py-2 ">
-								<p className="capitalize text-sm sm:text-base font-normal leading-none">
-									{portofolio.category.name}
-								</p>
-							</td>
-							<td className="px-1 py-2 w-[120px] md:w-fit">
-								<p className="capitalize text-xs sm:text-base font-normal leading-none">
-									{portofolio.tech.join(", ")}
-								</p>
-							</td>
-							<td className="px-1 py-2 relative group/redirect">
-								<UrlRender url={portofolio.imageUrl} />
-							</td>
-							<td className="relative px-1 py-2 group/redirect">
-								<UrlRender url={portofolio.redirectUrl} />
-							</td>
-							<td className="px-1 py-2 ">
-								<p className=" text-sm sm:text-base font-normal leading-none">
-									{new Date(portofolio.createdAt).toISOString().split("T")[0]}
-								</p>
-							</td>
-							<td className="px-1 py-2 flex items-center gap-2">
-								<button
-									className="rounded-full p-2 hover:bg-secondary"
-									onClick={e => {
-										e.preventDefault();
-										handleClickEditButton(portofolio);
-									}}
+			<div className="min-w-2xl">
+				<table className="w-full mt-4">
+					<thead>
+						<tr>
+							{columns.map(col => (
+								<th
+									key={col}
+									className="text-left capitalize text-sm md:text-base"
 								>
-									<PencilIcon />
-								</button>
-
-								<button
-									className="rounded-full p-2 hover:bg-secondary"
-									onClick={e => {
-										e.preventDefault();
-										handleClickDeleteButton(portofolio.id);
-									}}
-								>
-									<Trash2 />
-								</button>
-							</td>
+									{col}
+								</th>
+							))}
+							<th>Action</th>
 						</tr>
-					))}
-				</tbody>
-			</table>
+					</thead>
+					<tbody>
+						{allPortofolios.map(portofolio => (
+							<tr
+								key={portofolio.name}
+								className="border border-r-0 border-l-0 border-secondary t"
+							>
+								<td className="mt-1 px-1 py-2 ">
+									<p className="capitalize text-sm sm:text-base font-normal leading-none w-[120px] md:w-fit">
+										{portofolio.name}
+									</p>
+								</td>
+								<td className="px-1 py-2 ">
+									<p className="capitalize text-sm sm:text-base font-normal leading-none">
+										{portofolio.category.name}
+									</p>
+								</td>
+								<td className="px-1 py-2 w-[120px] md:w-fit">
+									<p className="capitalize text-xs sm:text-base font-normal leading-none">
+										{portofolio.tech.join(", ")}
+									</p>
+								</td>
+								<td className="px-1 py-2 relative group/redirect">
+									<UrlRender url={portofolio.imageUrl} />
+								</td>
+								<td className="relative px-1 py-2 group/redirect">
+									<UrlRender url={portofolio.redirectUrl} />
+								</td>
+								<td className="px-1 py-2 ">
+									<p className=" text-sm sm:text-base font-normal leading-none">
+										{new Date(portofolio.createdAt).toISOString().split("T")[0]}
+									</p>
+								</td>
+								<td className="px-1 py-2 flex items-center gap-2">
+									<button
+										className="rounded-full p-2 hover:bg-secondary"
+										onClick={e => {
+											e.preventDefault();
+											handleClickEditButton(portofolio);
+										}}
+									>
+										<PencilIcon />
+									</button>
+
+									<button
+										className="rounded-full p-2 hover:bg-secondary"
+										onClick={e => {
+											e.preventDefault();
+											handleClickDeleteButton(portofolio.id);
+										}}
+									>
+										<Trash2 />
+									</button>
+								</td>
+							</tr>
+						))}
+					</tbody>
+				</table>
+			</div>
 		);
 	}
 	return (

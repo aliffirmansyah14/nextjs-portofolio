@@ -31,7 +31,7 @@ const Projects = ({ projects, categories, itemCount }: ProjectsProps) => {
 
 	return (
 		<div>
-			<div className="flex flex-col gap-4 md:flex-row md:justify-between">
+			<div className="mt-7 flex flex-col gap-4 md:flex-row md:justify-between">
 				<Tabs
 					categories={allCategories}
 					onClick={handleOnClickTab}

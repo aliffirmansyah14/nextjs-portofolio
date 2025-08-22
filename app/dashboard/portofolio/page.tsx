@@ -5,6 +5,13 @@ import FormEditPortofolio from "@/components/shared/dashboard/portofolio/form-ed
 import { SidebarTrigger } from "@/components/shared/dashboard/Sidebar";
 import TablePortofolio from "@/components/shared/table-portofolio";
 import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardAction,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { getCategories, getPortofolios } from "@/lib/api";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
@@ -25,25 +32,30 @@ const PortofolioPage = () => {
 				/>
 			</header>
 			<div className="mt-4 px-2">
-				<div className="flex justify-between items-center">
-					<h2 className=" text-3xl font-semibold">Portofolios</h2>
-					<Suspense
-						fallback={
-							<Button disabled variant="outline" className="rounded-xl">
-								Add <Plus />
-							</Button>
-						}
-					>
-						<FormAddPortofolio categories={categories} />
-					</Suspense>
-				</div>
-				<div className="mt-4 overflow-x-auto scroll-h-sm scroll-track-dark">
-					<Suspense fallback={<TablePortofolioSkeleton />}>
-						<div className="min-w-2xl ">
+				<Card>
+					<CardHeader>
+						<CardTitle>
+							<h2 className=" text-3xl font-semibold">Portofolios</h2>
+						</CardTitle>
+						<CardAction>
+							<Suspense
+								fallback={
+									<Button disabled variant="outline" className="rounded-xl">
+										Add <Plus />
+									</Button>
+								}
+							>
+								<FormAddPortofolio categories={categories} />
+							</Suspense>
+						</CardAction>
+					</CardHeader>
+					<CardContent className="overflow-x-auto ">
+						<Suspense fallback={<TablePortofolioSkeleton />}>
 							<TablePortofolio portofolios={portofolios} />
-						</div>
-					</Suspense>
-				</div>
+						</Suspense>
+					</CardContent>
+					{/* <div className="mt-4 overflow-x-auto scroll-h-sm scroll-track-dark"></div> */}
+				</Card>
 			</div>
 			<FormEditPortofolio categories={categories} />
 			<FormDeletePortofolio />
