@@ -17,7 +17,7 @@ const useSidebar = () => {
 };
 
 const SidebarProvider = ({ children }: { children: React.ReactNode }) => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isOpen, setIsOpen] = useState<boolean>(true);
 	useLayoutEffect(() => {
 		function isDesktopUserAgent() {
 			const userAgent = navigator.userAgent;

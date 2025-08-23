@@ -7,9 +7,14 @@ import {
 } from "@/components/ui/card";
 import { getCountCategoriesWithCountProjects } from "@/lib/api";
 import { ArrowUpRight } from "lucide-react";
+import ErrorCard from "./error-card";
 
 const CategoryCard = async () => {
 	const categoriesWithCount = await getCountCategoriesWithCountProjects();
+
+	if (categoriesWithCount === undefined) {
+		return <ErrorCard />;
+	}
 
 	return (
 		<Card>

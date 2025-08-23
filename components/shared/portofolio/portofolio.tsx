@@ -4,12 +4,11 @@ import { Suspense } from "react";
 import ProjectsSkeleton from "./project-skeleton";
 import { getCategories, getCountPortofolios, getPortofolios } from "@/lib/api";
 import Projects from "./projects";
-import Pagination from "../pagination";
 
 const Portofolio = ({ page }: { page: string }) => {
 	// provide promise to client component
 	const categories = getCategories();
-	const projects = getPortofolios(Number(page));
+	const projects = getPortofolios({ page: Number(page) });
 	const countProjects = getCountPortofolios();
 
 	return (

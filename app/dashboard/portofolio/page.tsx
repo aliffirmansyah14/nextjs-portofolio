@@ -21,9 +21,10 @@ const PortofolioPage = () => {
 	const categories = getCategories();
 
 	return (
-		<div className="p-4">
+		<div className="dashboard dashboard-active p-4" id="dashboard-content">
 			<header className="flex items-center">
-				<SidebarTrigger />
+				<SidebarTrigger leftAction={true} isMobile={false} />
+				<SidebarTrigger isMobile={true} />
 				<Breadcrumbs
 					list={[
 						{ href: "/dashboard", label: "dashboard" },
@@ -49,7 +50,7 @@ const PortofolioPage = () => {
 							</Suspense>
 						</CardAction>
 					</CardHeader>
-					<CardContent className="overflow-x-auto ">
+					<CardContent className="overflow-x-auto border-t py-2">
 						<Suspense fallback={<TablePortofolioSkeleton />}>
 							<TablePortofolio portofolios={portofolios} />
 						</Suspense>

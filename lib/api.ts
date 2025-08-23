@@ -23,29 +23,46 @@ export const getCategories = cache(async () => {
 	}
 });
 
-export const getPortofolios = cache(async (page: number = 1) => {
-	if (isNaN(page)) return;
-	try {
-		await new Promise(resolve => setTimeout(resolve, 1000));
-		return await prisma.project.findMany({
-			select: { ...selectedRowProjects },
-			take: OFFSET_DATA,
-			skip: OFFSET_DATA * (page - 1),
-		});
-	} catch (error) {
-		if (error instanceof Error) {
-			switch (error.name) {
-				case "PrismaClientKnownRequestError":
-					console.log((error as PrismaClientKnownRequestError).code);
-				default:
-					console.log(error.name);
+export const getPortofolios = cache(
+	async (
+		props?:
+			| {
+					customArgs?: Prisma.ProjectFindManyArgs<DefaultArgs>;
+					page?: number;
+			  }
+			| undefined
+	) => {
+		try {
+			const selectedRowDefault = { select: { ...selectedRowProjects } };
+			if (!props?.customArgs || !props?.page) {
+				return await prisma.project.findMany({ ...selectedRowDefault });
+			} else {
+				if (props.page && isNaN(props.page)) {
+					console.log("props page bukan number");
+					return;
+				}
+				return await prisma.project.findMany({
+					select: { ...selectedRowProjects },
+					take: props.customArgs.take || OFFSET_DATA,
+					skip: props.customArgs.skip ? OFFSET_DATA * (props.page - 1) : 0,
+				});
 			}
+			// await new Promise(resolve => setTimeout(resolve, 1000));
+		} catch (error) {
+			if (error instanceof Error) {
+				switch (error.name) {
+					case "PrismaClientKnownRequestError":
+						console.log((error as PrismaClientKnownRequestError).code);
+					default:
+						console.log(error.name);
+				}
+			}
+			// if (error instanceof PrismaClientKnownRequestError) {
+			// 	throw new Error("error di get portofolios" + error.message);
+			// }
 		}
-		// if (error instanceof PrismaClientKnownRequestError) {
-		// 	throw new Error("error di get portofolios" + error.message);
-		// }
 	}
-});
+);
 
 export const getPortofolioById = cache(
 	async (

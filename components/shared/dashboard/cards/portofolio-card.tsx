@@ -1,6 +1,5 @@
 import {
 	Card,
-	CardContent,
 	CardDescription,
 	CardFooter,
 	CardHeader,
@@ -8,9 +7,13 @@ import {
 } from "@/components/ui/card";
 import { getCountPortofolios } from "@/lib/api";
 import { ArrowUpRight } from "lucide-react";
+import ErrorCard from "./error-card";
 
 const PortofolioCard = async () => {
 	const countProjects = await getCountPortofolios();
+	if (countProjects === undefined) {
+		return <ErrorCard />;
+	}
 	return (
 		<Card>
 			<CardHeader>

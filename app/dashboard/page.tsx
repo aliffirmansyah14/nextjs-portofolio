@@ -1,13 +1,20 @@
 import CategoryCard from "@/components/shared/dashboard/cards/category-card";
+import ChartCard from "@/components/shared/dashboard/cards/category-chart-card";
+import ChartPieCategory from "@/components/shared/dashboard/cards/category-pie-card";
 import PortofolioCard from "@/components/shared/dashboard/cards/portofolio-card";
 import SkeletonCard from "@/components/shared/dashboard/cards/skeleton-card";
 import Header from "@/components/shared/dashboard/Header";
 import { Card, CardContent } from "@/components/ui/card";
+import { getCountCategoriesWithCountProjects } from "@/lib/api";
 import { Suspense } from "react";
 
 const DashboardPage = () => {
+	const categoriesWithCount = getCountCategoriesWithCountProjects();
 	return (
-		<div className="p-2 md:pl-2 md:pr-12">
+		<div
+			className={`dashboard dashboard-active p-2 md:pl-2 md:pr-12`}
+			id="dashboard-content"
+		>
 			<Header text="Dashboard" />
 			<div className="md:px-2 mt-4 grid md:grid-cols-2 gap-4">
 				<Suspense fallback={<SkeletonCard />}>
@@ -15,6 +22,12 @@ const DashboardPage = () => {
 				</Suspense>
 				<Suspense fallback={<SkeletonCard />}>
 					<CategoryCard />
+				</Suspense>
+				<Suspense fallback={<SkeletonCard />}>
+					<ChartCard fetchCategory={categoriesWithCount} />
+				</Suspense>
+				<Suspense fallback={<SkeletonCard />}>
+					<ChartPieCategory fetchCategory={categoriesWithCount} />
 				</Suspense>
 			</div>
 			<div className="md:px-2 mt-5">
