@@ -1,10 +1,12 @@
 "use client";
 import { usePathname } from "next/navigation";
-import { sidebarLinks, SidebarTrigger, UsernameButton } from "./Sidebar";
-import ProgressLink from "../progress-link";
-import { Logo } from "../navbar";
+
 import { useSideBarZ } from "@/store/sidebar";
 import { useLayoutEffect } from "react";
+import ProgressLink from "../../progress-link";
+import SiderbarTriggerMobile from "./sidebar-trigger-mobile";
+import { sidebarLinks, UsernameButton } from "./Sidebar";
+import { Logo } from "../../navbar";
 
 const SidebarMobile = () => {
 	const isOpen = useSideBarZ(state => state.sidebar.mobile);
@@ -19,22 +21,14 @@ const SidebarMobile = () => {
 				/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i;
 			return mobileRegex.test(userAgent);
 		}
-		setInitIsOpen(!isMobileUserAgent());
+		setInitIsOpen(isMobileUserAgent());
 	}, []);
 
-	const callbackTriggerSidebar = () => {
-		const isHidden = document.body.style["overflow"] === "hidden";
-		if (isHidden) {
-			document.body.style["overflow"] = "auto";
-		} else {
-			document.body.style["overflow"] = "hidden";
-		}
-	};
 	return (
 		<aside
 			className={`${
-				isOpen ? "translate-x-0" : `-translate-x-[230px]`
-			} fixed md:hidden z-40 h-screen top-0 bg-secondary w-[230px] min-h-[100dvh] p-2`}
+				isOpen ? "translate-x-0" : `-translate-x-[300px]`
+			} fixed lg:hidden z-40 h-[100dvh] top-0 bg-secondary w-[230px] md:w-[300px]  min-h-[100dvh] p-2 transition-all`}
 		>
 			<div className="flex flex-col h-full py-2">
 				<header className="flex gap-2 items-center">
@@ -43,7 +37,7 @@ const SidebarMobile = () => {
 					</div>
 					<span className="font-semibold text-2xl">Admin</span>
 					<div className="ml-auto">
-						<SidebarTrigger isMobile={true} callback={callbackTriggerSidebar} />
+						<SiderbarTriggerMobile />
 					</div>
 				</header>
 				<nav className="mt-4">

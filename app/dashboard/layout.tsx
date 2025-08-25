@@ -1,6 +1,6 @@
-import { OverlaySidebar } from "@/components/shared/dashboard/Sidebar";
-import SidebarDekstop from "@/components/shared/dashboard/sidebar-dekstop";
-import SidebarMobile from "@/components/shared/dashboard/sidebar-mobile";
+import { OverlaySidebar } from "@/components/shared/dashboard/sidebar/Sidebar";
+import SidebarDekstop from "@/components/shared/dashboard/sidebar/sidebar-dekstop";
+import SidebarMobile from "@/components/shared/dashboard/sidebar/sidebar-mobile";
 import { SidebarProvider } from "@/context/SidebarContext";
 import { Metadata } from "next";
 
@@ -11,14 +11,16 @@ export const metadata: Metadata = {
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	return (
-		<div className="min-h-screen min-w-full bg-background relative">
-			<SidebarProvider>
+		<>
+			<div className="min-h-[100dvh] w-full bg-background flex overflow-clip">
+				{/* <SidebarProvider> */}
 				<SidebarDekstop />
-				<OverlaySidebar />
-				<main className="relative min-h-screen">{children}</main>
+				<main className="w-full py-2">{children}</main>
 				<SidebarMobile />
-			</SidebarProvider>
-		</div>
+				{/* </SidebarProvider> */}
+			</div>
+			<OverlaySidebar />
+		</>
 	);
 };
 

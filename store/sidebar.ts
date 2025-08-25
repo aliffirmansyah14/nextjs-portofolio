@@ -15,7 +15,7 @@ interface SidebarAction {
 export const useSideBarZ = create<SidebarState & SidebarAction>()(set => ({
 	sidebar: {
 		dekstop: true,
-		mobile: true,
+		mobile: false,
 	},
 	setDekstopSidebar: () => {
 		set(state => ({

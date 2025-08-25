@@ -159,35 +159,22 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 										hidden
 									/>
 									{!isImageEdit && (
-										<>
-											<Input
-												type="text"
-												defaultValue={
-													(state?.field["image"] as string) ||
-													actionPortofolio?.imageUrl ||
-													"tidak ada foto"
-												}
-												disabled
-											/>
-											<Input
-												type="text"
-												name="image"
-												defaultValue={
-													(state?.field["image"] as string) ||
-													actionPortofolio?.imageUrl ||
-													"tidak ada foto"
-												}
-												hidden
-											/>
-
-											<Button
-												type="button"
-												variant="outline"
-												className="rounded-xl"
+										<div className="w-full flex gap-2">
+											<div
+												className="flex-1"
 												onClick={() => setIsImageEdit(true)}
 											>
-												edit
-											</Button>
+												<Input
+													type="text"
+													defaultValue={
+														(state?.field["image"] as string) ||
+														actionPortofolio?.imageUrl ||
+														"tidak ada foto"
+													}
+													disabled
+												/>
+											</div>
+
 											<Button
 												type="button"
 												variant="outline"
@@ -198,7 +185,7 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 											>
 												view
 											</Button>
-										</>
+										</div>
 									)}
 
 									{isImageEdit && (

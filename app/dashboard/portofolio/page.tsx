@@ -2,7 +2,8 @@ import Breadcrumbs from "@/components/shared/dashboard/Breadcrumbs";
 import FormAddPortofolio from "@/components/shared/dashboard/portofolio/form-add-portofolio";
 import FormDeletePortofolio from "@/components/shared/dashboard/portofolio/form-delete-portofolio";
 import FormEditPortofolio from "@/components/shared/dashboard/portofolio/form-edit-portofolio";
-import { SidebarTrigger } from "@/components/shared/dashboard/Sidebar";
+import SiderbarTriggerDesktop from "@/components/shared/dashboard/sidebar/sidebar-trigger-desktop";
+import SiderbarTriggerMobile from "@/components/shared/dashboard/sidebar/sidebar-trigger-mobile";
 import TablePortofolio from "@/components/shared/table-portofolio";
 import { Button } from "@/components/ui/button";
 import {
@@ -21,10 +22,10 @@ const PortofolioPage = () => {
 	const categories = getCategories();
 
 	return (
-		<div className="dashboard dashboard-active p-4" id="dashboard-content">
+		<div className="px-4" id="dashboard-content">
 			<header className="flex items-center">
-				<SidebarTrigger leftAction={true} isMobile={false} />
-				<SidebarTrigger isMobile={true} />
+				<SiderbarTriggerDesktop />
+				<SiderbarTriggerMobile />
 				<Breadcrumbs
 					list={[
 						{ href: "/dashboard", label: "dashboard" },

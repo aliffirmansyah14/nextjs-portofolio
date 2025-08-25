@@ -5,6 +5,7 @@ import { Badge } from "../ui/badge";
 import { use } from "react";
 import { selectedRowProjects } from "@/lib/schema";
 import { useActionPortofolio } from "@/store/action-portofolio";
+import { formatDateToIndonesia } from "@/lib/utils";
 
 export type portofoliosType = Prisma.ProjectGetPayload<{
 	select: typeof selectedRowProjects;
@@ -76,7 +77,9 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 								</td>
 								<td className="px-1 py-2 ">
 									<p className=" text-sm sm:text-base font-normal leading-none">
-										{new Date(portofolio.createdAt).toISOString().split("T")[0]}
+										{formatDateToIndonesia(portofolio.createdAt, {
+											dateStyle: "medium",
+										})}
 									</p>
 								</td>
 								<td className="px-1 py-2 flex items-center gap-2">

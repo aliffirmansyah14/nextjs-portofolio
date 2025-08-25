@@ -29,7 +29,7 @@ const Project = ({ name, redirectUrl, tech, imageUrl }: ProjectProps) => {
 				backgroundSize: "cover",
 				backgroundRepeat: "no-repeat",
 			}}
-			className="h-[220px] rounded-2xl bg-secondary relative cursor-pointer group overflow-hidden "
+			className="h-[220px] border border-accent shadow rounded-2xl bg-secondary relative cursor-pointer group overflow-hidden "
 		>
 			<div className=" absolute inset-0 bg-black/35 md:bg-black/40 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity">
 				<div className="size-full flex flex-col justify-end">

@@ -1,10 +1,11 @@
 "use client";
-import { useSidebar } from "@/context/SidebarContext";
 import { usePathname } from "next/navigation";
-import { Logo } from "../navbar";
-import { sidebarLinks, UsernameButton } from "./Sidebar";
-import ProgressLink from "../progress-link";
+
 import { useSideBarZ } from "@/store/sidebar";
+import clsx from "clsx";
+import { Logo } from "../../navbar";
+import { sidebarLinks, UsernameButton } from "./Sidebar";
+import ProgressLink from "../../progress-link";
 
 const SidebarDekstop = () => {
 	const isOpen = useSideBarZ(state => state.sidebar.dekstop);
@@ -12,14 +13,18 @@ const SidebarDekstop = () => {
 
 	return (
 		<aside
-			className={`${
-				isOpen ? "md:translate-x-0" : `md:-translate-x-[230px]`
-			} fixed w-0 z-40 h-screen top-0 bg-secondary md:w-[230px] min-h-[100dvh] p-0 md:p-2 overflow-hidden`}
+			className={clsx(
+				"max-lg:hidden bg-background h-[100dvh] w-[230px] min-h-[100dvh]",
+				{
+					"sticky top-0": isOpen,
+					hidden: !isOpen,
+				}
+			)}
 		>
 			<div className="flex flex-col h-full py-2">
 				<header className="flex gap-2 items-center">
 					<div className="px-2">
-						<Logo size="sm" disabledText={true} />
+						<Logo size="sm" />
 					</div>
 				</header>
 				<nav className="mt-4">

@@ -3,13 +3,6 @@
 
 @custom-variant dark (&:is(.dark *));
 
-.dashboard {
-	@apply ml-0 h-screen;
-}
-.dashboard.dashboard-active {
-	@apply md:ml-[230px];
-}
-
 /* @theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);

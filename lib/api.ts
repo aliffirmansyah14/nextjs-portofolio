@@ -33,19 +33,26 @@ export const getPortofolios = cache(
 			| undefined
 	) => {
 		try {
-			const selectedRowDefault = { select: { ...selectedRowProjects } };
-			if (!props?.customArgs || !props?.page) {
-				return await prisma.project.findMany({ ...selectedRowDefault });
-			} else {
+			const selectedRowDefault = { ...selectedRowProjects };
+			// check ada props nya atau tidak
+			if (!props?.customArgs && !props?.page) {
+				return await prisma.project.findMany({ select: selectedRowDefault });
+			} else if (props.page || props.customArgs) {
+				// check props page
 				if (props.page && isNaN(props.page)) {
 					console.log("props page bukan number");
 					return;
 				}
-				return await prisma.project.findMany({
-					select: { ...selectedRowProjects },
-					take: props.customArgs.take || OFFSET_DATA,
-					skip: props.customArgs.skip ? OFFSET_DATA * (props.page - 1) : 0,
+
+				const portofolios = await prisma.project.findMany({
+					select: props.customArgs?.select || selectedRowDefault,
+					take: props.customArgs?.take || OFFSET_DATA,
+					skip:
+						props.customArgs?.skip ||
+						OFFSET_DATA * (props.page ? props.page - 1 : 0),
 				});
+
+				return portofolios;
 			}
 			// await new Promise(resolve => setTimeout(resolve, 1000));
 		} catch (error) {
