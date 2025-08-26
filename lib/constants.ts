@@ -1,4 +1,11 @@
+import { LayoutDashboardIcon, SwatchBook } from "lucide-react";
+
 export const OFFSET_DATA = 3;
+
+export const sidebarLinks = [
+	{ href: "/dashboard", label: "dashboard", icon: LayoutDashboardIcon },
+	{ href: "/dashboard/portofolio", label: "portofolio", icon: SwatchBook },
+];
 
 // dummy projects data
 // const projects: ProjectType[] = [

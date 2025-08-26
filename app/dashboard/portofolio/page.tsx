@@ -4,6 +4,7 @@ import FormDeletePortofolio from "@/components/shared/dashboard/portofolio/form-
 import FormEditPortofolio from "@/components/shared/dashboard/portofolio/form-edit-portofolio";
 import SiderbarTriggerDesktop from "@/components/shared/dashboard/sidebar/sidebar-trigger-desktop";
 import SiderbarTriggerMobile from "@/components/shared/dashboard/sidebar/sidebar-trigger-mobile";
+import SkeletonTable from "@/components/shared/skeleton-table";
 import TablePortofolio from "@/components/shared/table-portofolio";
 import { Button } from "@/components/ui/button";
 import {
@@ -17,8 +18,16 @@ import { getCategories, getPortofolios } from "@/lib/api";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
 
-const PortofolioPage = () => {
-	const portofolios = getPortofolios();
+const PortofolioPage = async ({
+	searchParams,
+}: {
+	searchParams: Promise<{ page?: string }>;
+}) => {
+	const { page = "1" } = await searchParams;
+	const portofolios = getPortofolios({
+		customArgs: { take: 4 },
+		page: Number(page),
+	});
 	const categories = getCategories();
 
 	return (
@@ -52,7 +61,7 @@ const PortofolioPage = () => {
 						</CardAction>
 					</CardHeader>
 					<CardContent className="overflow-x-auto border-t py-2">
-						<Suspense fallback={<TablePortofolioSkeleton />}>
+						<Suspense fallback={<SkeletonTable row={4} col={6} />}>
 							<TablePortofolio portofolios={portofolios} />
 						</Suspense>
 					</CardContent>
@@ -66,62 +75,3 @@ const PortofolioPage = () => {
 };
 
 export default PortofolioPage;
-
-const TablePortofolioSkeleton = () => {
-	return (
-		<table className="w-full">
-			<thead>
-				<tr>
-					<td className="px-1 py-2 w-[10%] ">
-						<div className=" h-4 bg-secondary rounded-2xl animate-pulse"></div>
-					</td>
-					<td className="px-1 py-2 w-[10%] ">
-						<div className=" h-4 bg-secondary rounded-2xl animate-pulse "></div>
-					</td>
-					<td className="px-1 py-2 w-[15%] ">
-						<div className=" h-4 bg-secondary rounded-2xl animate-pulse"></div>
-					</td>
-					<td className="px-1 py-2 w-[10%]">
-						<div className=" h-4 bg-secondary rounded-2xl animate-pulse"></div>
-					</td>
-					<td className="px-1 py-2 w-[20%]">
-						<div className=" h-4 bg-secondary rounded-2xl animate-pulse"></div>
-					</td>
-					<td className="px-1 py-2 w-[15%]">
-						<div className=" h-4 bg-secondary rounded-2xl animate-pulse"></div>
-					</td>
-					<td className="px-1 py-2 w-[10%]">
-						<div className=" h-4 bg-secondary rounded-2xl animate-pulse"></div>
-					</td>
-				</tr>
-			</thead>
-			<tbody>
-				{Array.from({ length: 5 }).map((_, i) => (
-					<tr key={i} className="border border-r-0 border-l-0 border-secondary">
-						<td className="px-1 py-2">
-							<div className="h-4 bg-secondary rounded-2xl animate-pulse"></div>
-						</td>
-						<td className="px-1 py-2 ">
-							<div className="h-4 bg-secondary rounded-2xl animate-pulse"></div>
-						</td>
-						<td className="px-1 py-2">
-							<div className="h-4 bg-secondary rounded-2xl animate-pulse"></div>
-						</td>
-						<td className="px-1 py-2">
-							<div className="h-4 bg-secondary rounded-2xl animate-pulse"></div>
-						</td>
-						<td className="px-1 py-2">
-							<div className="h-4 bg-secondary rounded-2xl animate-pulse"></div>
-						</td>
-						<td className="px-1 py-2">
-							<div className="h-4 bg-secondary rounded-2xl animate-pulse"></div>
-						</td>
-						<td className="px-1 py-2">
-							<div className="h-4 bg-secondary rounded-2xl animate-pulse"></div>
-						</td>
-					</tr>
-				))}
-			</tbody>
-		</table>
-	);
-};

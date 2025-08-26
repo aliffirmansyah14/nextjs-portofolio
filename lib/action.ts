@@ -13,7 +13,7 @@ import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
 import { put, del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
-import { getPortofolioById } from "./api";
+import { getPortofolioById, isUserLogin } from "./api";
 
 export const authenticate = async (prevState: unknown, formData: FormData) => {
 	const parsedFormData = loginFormSchema.safeParse(
@@ -94,6 +94,9 @@ export const createPortofolio = async (
 	prevState: unknown,
 	formData: FormData
 ) => {
+	const isLogin = await isUserLogin();
+	if (!isLogin) return;
+
 	const createFormdata: createPortofolioFormType = {
 		name: formData.get("name") as string,
 		category: formData.get("category") as string,
@@ -150,6 +153,9 @@ export const editPortofolio = async (
 	prevState: unknown,
 	formData: FormData
 ) => {
+	const isLogin = await isUserLogin();
+	if (!isLogin) return;
+
 	if (!idProject) return;
 	const image = formData.get("image");
 	const imageName = formData.get("imageName") as string;
@@ -177,6 +183,7 @@ export const editPortofolio = async (
 			error: parsedFormData.error.flatten().fieldErrors,
 		};
 	}
+
 	if (!isImageFile) {
 		await prisma.project.update({
 			data: {
@@ -234,6 +241,9 @@ export const editPortofolio = async (
 };
 
 export const deletePortofolioById = async (id: string) => {
+	const isLogin = await isUserLogin();
+	if (!isLogin) return;
+
 	const portofolio = await getPortofolioById(id, { imageUrl: true });
 	try {
 		if (!id || !portofolio) return;

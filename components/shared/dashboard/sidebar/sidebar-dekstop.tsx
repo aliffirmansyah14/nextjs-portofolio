@@ -1,11 +1,11 @@
 "use client";
 import { usePathname } from "next/navigation";
-
 import { useSideBarZ } from "@/store/sidebar";
 import clsx from "clsx";
 import { Logo } from "../../navbar";
-import { sidebarLinks, UsernameButton } from "./Sidebar";
 import ProgressLink from "../../progress-link";
+import { sidebarLinks } from "@/lib/constants";
+import UsernameButton from "./username-button";
 
 const SidebarDekstop = () => {
 	const isOpen = useSideBarZ(state => state.sidebar.dekstop);
@@ -21,7 +21,7 @@ const SidebarDekstop = () => {
 				}
 			)}
 		>
-			<div className="flex flex-col h-full py-2">
+			<div className="flex flex-col h-full py-4">
 				<header className="flex gap-2 items-center">
 					<div className="px-2">
 						<Logo size="sm" />
@@ -29,7 +29,7 @@ const SidebarDekstop = () => {
 				</header>
 				<nav className="mt-4">
 					<div className="p-2 text-[13px] text-foreground/70 h-8">Menu</div>
-					<ul>
+					<ul className="px-2">
 						{sidebarLinks.map((link, index) => {
 							const isLinkActive = pathname === link.href;
 							return (
@@ -40,13 +40,14 @@ const SidebarDekstop = () => {
 										isLinkActive ? "bg-primary/40" : "bg-none"
 									}`}
 								>
-									{link.icon}
+									{<link.icon />}
 									{link.label}
 								</ProgressLink>
 							);
 						})}
 					</ul>
 				</nav>
+
 				<UsernameButton />
 			</div>
 		</aside>

@@ -29,7 +29,13 @@ const Tabs = ({ categories, onClick, isActive }: TabsProps) => {
 				return (
 					<div
 						key={i}
-						onClick={() => onClick(category.name)}
+						onClick={() => {
+							if (isActive === category.name) {
+								onClick("all");
+							} else {
+								onClick(category.name);
+							}
+						}}
 						className="cursor-pointer"
 					>
 						<Badge

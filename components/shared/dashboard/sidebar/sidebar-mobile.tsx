@@ -5,8 +5,9 @@ import { useSideBarZ } from "@/store/sidebar";
 import { useLayoutEffect } from "react";
 import ProgressLink from "../../progress-link";
 import SiderbarTriggerMobile from "./sidebar-trigger-mobile";
-import { sidebarLinks, UsernameButton } from "./Sidebar";
+import UsernameButton from "@/components/shared/dashboard/sidebar/username-button";
 import { Logo } from "../../navbar";
+import { sidebarLinks } from "@/lib/constants";
 
 const SidebarMobile = () => {
 	const isOpen = useSideBarZ(state => state.sidebar.mobile);
@@ -53,7 +54,7 @@ const SidebarMobile = () => {
 										isLinkActive ? "bg-primary/40" : "bg-none"
 									}`}
 								>
-									{link.icon}
+									{<link.icon />}
 									{link.label}
 								</ProgressLink>
 							);

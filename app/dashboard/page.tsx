@@ -7,6 +7,7 @@ import Header from "@/components/shared/dashboard/Header";
 import InfoTable from "@/components/shared/dashboard/info-table";
 import { getCountCategoriesWithCountProjects } from "@/lib/api";
 import { Suspense } from "react";
+import SkeletonTable from "@/components/shared/skeleton-table";
 
 const DashboardPage = () => {
 	const categoriesWithCount = getCountCategoriesWithCountProjects();
@@ -28,7 +29,9 @@ const DashboardPage = () => {
 				</Suspense>
 			</div>
 			<div className="md:px-2 py-5">
-				<InfoTable />
+				<Suspense fallback={<SkeletonTable row={5} col={3} />}>
+					<InfoTable />
+				</Suspense>
 			</div>
 		</div>
 	);

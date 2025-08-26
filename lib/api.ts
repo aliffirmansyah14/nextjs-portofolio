@@ -8,6 +8,7 @@ import {
 } from "@prisma/client/runtime/library";
 import { Prisma } from "@prisma/client";
 import { OFFSET_DATA } from "./constants";
+import { getSession } from "next-auth/react";
 
 export const getCategories = cache(async () => {
 	try {
@@ -49,7 +50,8 @@ export const getPortofolios = cache(
 					take: props.customArgs?.take || OFFSET_DATA,
 					skip:
 						props.customArgs?.skip ||
-						OFFSET_DATA * (props.page ? props.page - 1 : 0),
+						(props.customArgs?.take || OFFSET_DATA) *
+							(props.page ? props.page - 1 : 0),
 				});
 
 				return portofolios;
@@ -119,4 +121,8 @@ export const getCountCategoriesWithCountProjects = cache(async () => {
 	} catch (error) {
 		console.log("error di count categories " + error);
 	}
+});
+
+export const isUserLogin = cache(async () => {
+	return await getSession();
 });
