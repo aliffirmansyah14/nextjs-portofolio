@@ -25,14 +25,10 @@ export const getCategories = cache(async () => {
 });
 
 export const getPortofolios = cache(
-	async (
-		props?:
-			| {
-					customArgs?: Prisma.ProjectFindManyArgs<DefaultArgs>;
-					page?: number;
-			  }
-			| undefined
-	) => {
+	async (props?: {
+		customArgs?: Prisma.ProjectFindManyArgs<DefaultArgs>;
+		page?: number;
+	}) => {
 		try {
 			const selectedRowDefault = { ...selectedRowProjects };
 			// check ada props nya atau tidak

@@ -13,10 +13,10 @@ import { signOut, useSession } from "next-auth/react";
 import { useState } from "react";
 import { AuthError } from "next-auth";
 import ProgressLink from "../../progress-link";
+import { setOverFlowHBody } from "@/lib/utils";
 
 export const UsernameButton = () => {
 	const { data: session } = useSession();
-
 	const [isLoading, setIsloading] = useState<boolean>(false);
 
 	const handleOnClickLogout = async (
@@ -42,22 +42,26 @@ export const UsernameButton = () => {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<button className="mt-auto px-2 hover:bg-primary/30 rounded ">
+				<button className="mt-auto px-2 hover:bg-primary/30 rounded w-full">
 					<div className="py-1 w-full  flex justify-between">
 						<span>{session?.user.name ? session.user.name : "Loading..."}</span>
 						<ChevronUp />
 					</div>
 				</button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-56" align="end">
+			<DropdownMenuContent className="w-56" align="start">
 				<DropdownMenuLabel>My account</DropdownMenuLabel>
 				<DropdownMenuSeparator />
 				<DropdownMenuItem>
-					<ProgressLink href="/" className="w-full cursor-pointer">
+					<ProgressLink
+						href="/"
+						className="w-full cursor-pointer"
+						callback={() => setOverFlowHBody()}
+					>
 						Home page
 					</ProgressLink>
 				</DropdownMenuItem>
-				<DropdownMenuItem asChild>
+				<DropdownMenuItem asChild variant="destructive">
 					<button
 						onClick={handleOnClickLogout}
 						disabled={isLoading}

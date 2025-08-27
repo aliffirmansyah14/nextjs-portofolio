@@ -30,8 +30,8 @@ const useProgress = () => {
 			const randomValue = getRandomValue(1, 30);
 			setValue(acc => Math.min(acc + randomValue, 100));
 		} else if (state === "complete") {
-			clearInterval(interval);
 			setValue(100);
+			clearInterval(interval);
 		}
 	};
 	const getRandomValue = (min: number, max: number) => {
@@ -40,6 +40,7 @@ const useProgress = () => {
 
 	const start = () => {
 		setState("in-progress");
+		setValue(0);
 	};
 
 	const reset = () => {

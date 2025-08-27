@@ -155,6 +155,11 @@
 	--shadow-2xl: 0px 1px 0px 0px hsl(0 0% 0% / 0);
 }
 
+@theme {
+	--sidebar-width: 230px;
+	--sidebar-width-md: 200px;
+}
+
 @theme inline {
 	--color-background: var(--background);
 	--color-foreground: var(--foreground);

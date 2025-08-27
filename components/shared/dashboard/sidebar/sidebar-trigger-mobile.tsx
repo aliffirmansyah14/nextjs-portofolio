@@ -16,7 +16,7 @@ const SiderbarTriggerMobile = () => {
 	};
 
 	return (
-		<div className="block lg:hidden">
+		<div className="block md:hidden">
 			<button
 				role="button"
 				onClick={e => {

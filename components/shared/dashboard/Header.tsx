@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import SiderbarTriggerDesktop from "./sidebar/sidebar-trigger-desktop";
 import SiderbarTriggerMobile from "./sidebar/sidebar-trigger-mobile";
 
 type HeaderProps = {
@@ -12,7 +11,6 @@ type HeaderProps = {
 const Header = ({ text, textStyle }: HeaderProps) => {
 	return (
 		<header className="flex gap-1">
-			<SiderbarTriggerDesktop />
 			<SiderbarTriggerMobile />
 			<h1 className={cn("text-2xl font-semibold", textStyle)}>{text}</h1>
 		</header>

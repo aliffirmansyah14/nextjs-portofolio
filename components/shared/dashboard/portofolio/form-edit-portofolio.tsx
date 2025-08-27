@@ -34,9 +34,6 @@ const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
 		editPortofolio.bind(null, actionIdPortofolio),
 		undefined
 	);
-	useEffect(() => {
-		console.log("state...");
-	}, [isImageEdit]);
 
 	return (
 		<>

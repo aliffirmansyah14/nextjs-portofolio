@@ -1,9 +1,9 @@
 "use client";
 import { useActiveSection } from "@/hooks/useActiveSession";
-import { cn } from "@/lib/utils";
+import { cn, setOverFlowHBody } from "@/lib/utils";
 import { LayoutDashboardIcon, MenuIcon, X } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ProgressLink from "./progress-link";
 import { useSession } from "next-auth/react";
 import clsx from "clsx";
@@ -188,6 +188,7 @@ const NavigasiMenuMobile = ({
 					<ProgressLink
 						href="/dashboard"
 						className="border-b block  px-2 py-1 capitalize hover:bg-accent active:bg-accent"
+						callback={() => setOverFlowHBody()}
 					>
 						Dashboard
 					</ProgressLink>

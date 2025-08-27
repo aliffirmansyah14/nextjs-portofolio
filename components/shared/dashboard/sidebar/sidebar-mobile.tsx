@@ -29,7 +29,7 @@ const SidebarMobile = () => {
 		<aside
 			className={`${
 				isOpen ? "translate-x-0" : `-translate-x-[300px]`
-			} fixed lg:hidden z-40 h-[100dvh] top-0 bg-secondary w-[230px] md:w-[300px]  min-h-[100dvh] p-2 transition-all`}
+			} fixed md:hidden z-40 h-[100dvh] top-0 bg-sidebar w-[250px] min-h-[100dvh] p-2 transition-all`}
 		>
 			<div className="flex flex-col h-full py-2">
 				<header className="flex gap-2 items-center">

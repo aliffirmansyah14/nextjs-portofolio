@@ -1,11 +1,10 @@
 "use client";
 import { Prisma } from "@prisma/client";
-import { PencilIcon, Trash2 } from "lucide-react";
 import { Badge } from "../ui/badge";
 import { use } from "react";
 import { selectedRowProjects } from "@/lib/schema";
-import { useActionPortofolio } from "@/store/action-portofolio";
 import { formatDateToIndonesia } from "@/lib/utils";
+import ActionButtonPortofolioTable from "./dashboard/portofolio/actions-button-portofolio";
 
 export type portofoliosType = Prisma.ProjectGetPayload<{
 	select: typeof selectedRowProjects;
@@ -16,35 +15,29 @@ type TablePortofolioProps = {
 };
 
 const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
-	const { setActionPortofolio, setActionIdPortofolio } = useActionPortofolio();
 	const allPortofolios = use(portofolios);
 
-	const handleClickEditButton = (portofolio: portofoliosType) => {
-		setActionPortofolio(portofolio);
-		setActionIdPortofolio(portofolio.id);
-		document.getElementById("trigger-edit-portofolio")?.click();
-	};
-	const handleClickDeleteButton = (id: string) => {
-		setActionIdPortofolio(id);
-		document.getElementById("trigger-delete-portofolio")?.click();
-	};
-
 	if (allPortofolios !== undefined && allPortofolios.length > 0) {
-		const columns = Object.keys(allPortofolios[0]);
+		const columns = Object.keys(allPortofolios[0]).map(
+			col => col.toLowerCase().split("url")[0]
+		);
 		columns.shift();
 		return (
 			<div className="min-w-2xl">
 				<table className="w-full mt-4">
 					<thead>
 						<tr>
-							{columns.map(col => (
-								<th
-									key={col}
-									className="text-left capitalize text-sm md:text-base"
-								>
-									{col}
-								</th>
-							))}
+							{columns.map((col, i) => {
+								const styleText = i === 0 ? "text-left" : "text-center";
+								return (
+									<th
+										key={i}
+										className={`${styleText} capitalize text-sm md:text-base`}
+									>
+										{col}
+									</th>
+								);
+							})}
 							<th>Action</th>
 						</tr>
 					</thead>
@@ -55,17 +48,17 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 								className="border border-r-0 border-l-0 border-secondary t"
 							>
 								<td className="mt-1 px-1 py-2 ">
-									<p className="capitalize text-sm sm:text-base font-normal leading-none w-[120px] md:w-fit">
+									<p className="capitalize text-sm lg:text-base font-normal leading-none w-[120px] md:w-fit">
 										{portofolio.name}
 									</p>
 								</td>
 								<td className="px-1 py-2 ">
-									<p className="capitalize text-sm sm:text-base font-normal leading-none">
+									<p className="capitalize text-sm lg:text-base font-normal leading-none">
 										{portofolio.category.name}
 									</p>
 								</td>
 								<td className="px-1 py-2 w-[120px] md:w-fit">
-									<p className="capitalize text-xs sm:text-base font-normal leading-none">
+									<p className="capitalize text-xs lg:text-base font-normal leading-none">
 										{portofolio.tech.join(", ")}
 									</p>
 								</td>
@@ -77,31 +70,20 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 								</td>
 								<td className="px-1 py-2 ">
 									<p className=" text-sm sm:text-base font-normal leading-none">
-										{formatDateToIndonesia(portofolio.createdAt, {
-											dateStyle: "medium",
-										})}
+										<span className="max-md:block lg:hidden ">
+											{formatDateToIndonesia(portofolio.createdAt, {
+												dateStyle: "short",
+											})}
+										</span>
+										<span className="max-md:hidden lg:block">
+											{formatDateToIndonesia(portofolio.createdAt, {
+												dateStyle: "medium",
+											})}
+										</span>
 									</p>
 								</td>
 								<td className="px-1 py-2 flex items-center gap-2">
-									<button
-										className="rounded-full p-2 hover:bg-secondary"
-										onClick={e => {
-											e.preventDefault();
-											handleClickEditButton(portofolio);
-										}}
-									>
-										<PencilIcon />
-									</button>
-
-									<button
-										className="rounded-full p-2 hover:bg-secondary"
-										onClick={e => {
-											e.preventDefault();
-											handleClickDeleteButton(portofolio.id);
-										}}
-									>
-										<Trash2 />
-									</button>
+									<ActionButtonPortofolioTable portofolio={portofolio} />
 								</td>
 							</tr>
 						))}

@@ -2,7 +2,6 @@ import Breadcrumbs from "@/components/shared/dashboard/Breadcrumbs";
 import FormAddPortofolio from "@/components/shared/dashboard/portofolio/form-add-portofolio";
 import FormDeletePortofolio from "@/components/shared/dashboard/portofolio/form-delete-portofolio";
 import FormEditPortofolio from "@/components/shared/dashboard/portofolio/form-edit-portofolio";
-import SiderbarTriggerDesktop from "@/components/shared/dashboard/sidebar/sidebar-trigger-desktop";
 import SiderbarTriggerMobile from "@/components/shared/dashboard/sidebar/sidebar-trigger-mobile";
 import SkeletonTable from "@/components/shared/skeleton-table";
 import TablePortofolio from "@/components/shared/table-portofolio";
@@ -33,7 +32,6 @@ const PortofolioPage = async ({
 	return (
 		<div className="px-4" id="dashboard-content">
 			<header className="flex items-center">
-				<SiderbarTriggerDesktop />
 				<SiderbarTriggerMobile />
 				<Breadcrumbs
 					list={[
@@ -42,7 +40,7 @@ const PortofolioPage = async ({
 					]}
 				/>
 			</header>
-			<div className="mt-4 px-2">
+			<div className="mt-4 sm:px-2 md:px-0">
 				<Card>
 					<CardHeader>
 						<CardTitle>
@@ -60,7 +58,7 @@ const PortofolioPage = async ({
 							</Suspense>
 						</CardAction>
 					</CardHeader>
-					<CardContent className="overflow-x-auto border-t py-2">
+					<CardContent className="overflow-x-auto border-t py-2 lg:scroll-h-sm lg:scroll-track-dark">
 						<Suspense fallback={<SkeletonTable row={4} col={6} />}>
 							<TablePortofolio portofolios={portofolios} />
 						</Suspense>

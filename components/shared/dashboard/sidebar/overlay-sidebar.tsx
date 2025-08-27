@@ -8,7 +8,7 @@ const OverlaySidebar = () => {
 		<div
 			className={`${
 				isOpen ? "fixed" : "hidden"
-			} lg:hidden lg:pointer-events-none z-30 top-0 bottom-0 w-full bg-black/70`}
+			} md:hidden lg:pointer-events-none z-30 top-0 bottom-0 w-full bg-black/70`}
 			onClick={() => {
 				const isHidden = document.body.style["overflow"] === "hidden";
 				if (isHidden && isOpen) {

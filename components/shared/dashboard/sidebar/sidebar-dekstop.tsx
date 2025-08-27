@@ -8,18 +8,13 @@ import { sidebarLinks } from "@/lib/constants";
 import UsernameButton from "./username-button";
 
 const SidebarDekstop = () => {
-	const isOpen = useSideBarZ(state => state.sidebar.dekstop);
 	const pathname = usePathname();
 
 	return (
 		<aside
-			className={clsx(
-				"max-lg:hidden bg-background h-[100dvh] w-[230px] min-h-[100dvh]",
-				{
-					"sticky top-0": isOpen,
-					hidden: !isOpen,
-				}
-			)}
+			className={
+				"md:sticky top-0 max-md:hidden bg-background h-[100dvh] min-h-[100dvh] "
+			}
 		>
 			<div className="flex flex-col h-full py-4">
 				<header className="flex gap-2 items-center">
@@ -27,9 +22,9 @@ const SidebarDekstop = () => {
 						<Logo size="sm" />
 					</div>
 				</header>
-				<nav className="mt-4">
+				<nav className="mt-4 flex-1 flex flex-col">
 					<div className="p-2 text-[13px] text-foreground/70 h-8">Menu</div>
-					<ul className="px-2">
+					<ul className="px-2 flex-1 flex flex-col">
 						{sidebarLinks.map((link, index) => {
 							const isLinkActive = pathname === link.href;
 							return (
@@ -45,10 +40,9 @@ const SidebarDekstop = () => {
 								</ProgressLink>
 							);
 						})}
+						<UsernameButton />
 					</ul>
 				</nav>
-
-				<UsernameButton />
 			</div>
 		</aside>
 	);

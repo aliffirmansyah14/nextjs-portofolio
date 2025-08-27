@@ -20,3 +20,11 @@ export function formatDateToIndonesia(
 	const formatter = new Intl.DateTimeFormat("id-ID", options ?? defaultOptions);
 	return formatter.format(date);
 }
+
+export const setOverFlowHBody = () => {
+	if (typeof window === undefined) return;
+	const isHidden = document.body.style["overflow"] === "hidden";
+	if (isHidden) {
+		document.body.style["overflow"] = "auto";
+	}
+};

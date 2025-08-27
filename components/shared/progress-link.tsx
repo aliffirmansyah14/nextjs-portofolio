@@ -7,21 +7,28 @@ import React, { startTransition } from "react";
 type ProgressLinkProps = {
 	href: string;
 	children: React.ReactNode;
+	callback?: () => void;
 } & React.ComponentProps<"a">;
 
-const ProgressLink = ({ href, children, ...rest }: ProgressLinkProps) => {
+const ProgressLink = ({
+	href,
+	children,
+	callback,
+	...rest
+}: ProgressLinkProps) => {
 	const router = useRouter();
 	const progress = useProgressBar();
 
 	const navigateToDestination = (e: React.MouseEvent<HTMLAnchorElement>) => {
 		e.preventDefault();
+		callback?.();
 		progress.start();
 
 		startTransition(() => {
 			if (href) {
 				router.push(href);
+				progress.done();
 			}
-			progress.done();
 		});
 	};
 
