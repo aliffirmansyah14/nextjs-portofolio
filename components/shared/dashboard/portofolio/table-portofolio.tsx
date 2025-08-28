@@ -3,6 +3,9 @@ import { formatDateToIndonesia, getMinMax } from "@/lib/utils";
 import ActionButtonPortofolioTable from "@/components/shared/dashboard/portofolio/actions-button-portofolio";
 import { getPortofolios } from "@/lib/api";
 import { MAX_TAKE, MIN_TAKE } from "@/lib/constants";
+import { Button } from "@/components/ui/button";
+import { ArrowLeftIcon, Frown } from "lucide-react";
+import NotFoundButton from "./not-found-button";
 
 type TablePortofolioProps = {
 	page: number | string;
@@ -17,6 +20,7 @@ const TablePortofolio = async ({
 }: TablePortofolioProps) => {
 	const pageParam = Number(page) || 1;
 	const takeParam = getMinMax(Number(take) || 4, MIN_TAKE, MAX_TAKE);
+	const searchParam = search || "";
 
 	const allPortofolios = await getPortofolios({
 		customArgs: {
@@ -25,19 +29,19 @@ const TablePortofolio = async ({
 				OR: [
 					{
 						name: {
-							contains: search,
+							contains: searchParam,
 						},
 					},
 					{
 						category: {
 							name: {
-								contains: search,
+								contains: searchParam,
 							},
 						},
 					},
 					{
 						tech: {
-							has: search,
+							has: searchParam,
 						},
 					},
 				],
@@ -122,8 +126,8 @@ const TablePortofolio = async ({
 		);
 	}
 	return (
-		<div className="text-center">
-			<p>Nothing here</p>
+		<div className="min-w-2xl h-auto md:h-[280px] grid place-content-center">
+			<NotFoundButton />
 		</div>
 	);
 };

@@ -14,7 +14,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { getCategories, getCountPortofolios, getPortofolios } from "@/lib/api";
+import { getCategories, getCountPortofolios } from "@/lib/api";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
 import PaginationTable from "@/components/shared/dashboard/portofolio/pagination";
