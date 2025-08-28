@@ -109,7 +109,7 @@ export const getCountPortofolios = cache(async (query?: string) => {
 					},
 					{
 						tech: {
-							has: query,
+							has: query || "",
 						},
 					},
 				],
