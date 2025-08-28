@@ -1,12 +1,18 @@
 "use client";
 import { use, useState } from "react";
 import Tabs from "./tabs";
-import { portofoliosType } from "../table-portofolio";
 import Project from "./project";
 import Pagination from "../pagination";
+import { Prisma } from "@prisma/client";
+import { selectedRowProjects } from "@/lib/schema";
+import NotFoundButton from "../not-found-button";
+
+export type PortofoliosType = Prisma.ProjectGetPayload<{
+	select: typeof selectedRowProjects;
+}>;
 
 type ProjectsProps = {
-	projects: Promise<portofoliosType[] | undefined>;
+	projects: Promise<PortofoliosType[] | undefined>;
 	categories: Promise<{ name: string; id: string }[]>;
 	itemCount: Promise<number | undefined>;
 };
@@ -46,7 +52,7 @@ const Projects = ({ projects, categories, itemCount }: ProjectsProps) => {
 					})
 				) : (
 					<div className="col-span-1 md:col-span-2 lg:col-span-3 text-lg md:text-xl text-center">
-						Nothing...
+						<NotFoundButton />
 					</div>
 				)}
 			</div>
