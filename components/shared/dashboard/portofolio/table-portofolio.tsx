@@ -3,8 +3,6 @@ import { formatDateToIndonesia, getMinMax } from "@/lib/utils";
 import ActionButtonPortofolioTable from "@/components/shared/dashboard/portofolio/actions-button-portofolio";
 import { getPortofolios } from "@/lib/api";
 import { MAX_TAKE, MIN_TAKE } from "@/lib/constants";
-import { Button } from "@/components/ui/button";
-import { ArrowLeftIcon, Frown } from "lucide-react";
 import NotFoundButton from "./not-found-button";
 
 type TablePortofolioProps = {

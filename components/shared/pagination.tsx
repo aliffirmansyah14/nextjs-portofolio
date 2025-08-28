@@ -12,6 +12,8 @@ const Pagination = ({
 	itemCount: Promise<number | undefined>;
 }) => {
 	const totalData = use(itemCount);
+
+	console.log(totalData);
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();

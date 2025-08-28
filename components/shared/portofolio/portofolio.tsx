@@ -8,7 +8,10 @@ import Projects from "./projects";
 const Portofolio = ({ page }: { page: string }) => {
 	// provide promise to client component
 	const categories = getCategories();
-	const projects = getPortofolios({ page: Number(page) });
+	const projects = getPortofolios({
+		customArgs: { take: 6 },
+		page: Number(page),
+	});
 	const countProjects = getCountPortofolios();
 
 	return (

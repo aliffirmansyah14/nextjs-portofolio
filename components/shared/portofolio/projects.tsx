@@ -1,12 +1,17 @@
 "use client";
 import { use, useState } from "react";
 import Tabs from "./tabs";
-import { portofoliosType } from "../table-portofolio";
 import Project from "./project";
 import Pagination from "../pagination";
+import { Prisma } from "@prisma/client";
+import { selectedRowProjects } from "@/lib/schema";
+
+export type PortofoliosType = Prisma.ProjectGetPayload<{
+	select: typeof selectedRowProjects;
+}>;
 
 type ProjectsProps = {
-	projects: Promise<portofoliosType[] | undefined>;
+	projects: Promise<PortofoliosType[] | undefined>;
 	categories: Promise<{ name: string; id: string }[]>;
 	itemCount: Promise<number | undefined>;
 };
