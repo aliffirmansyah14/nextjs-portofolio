@@ -37,13 +37,16 @@ const AboutMe = () => {
 			>
 				<div className="flex-1">
 					<p className="text-muted-foreground tracking-tight font-mono">
-						A BIT ABOUT ME
+						Sedikit tentang saya
 					</p>
 					<strong className="text-2xl lg:text-4xl">Alif Firmansyah</strong>
-					<p className="mt-4 max-w-xl text-muted-foreground tracking-tighter text-lg md:text-xl lg:text-2xl">
-						I am a Frontend web developer who is passionate about creating
-						beautiful and joyful digital experiences. Besides design, I love
-						music, games and travelling.
+					<p className="mt-4 max-w-xl text-muted-foreground tracking-tighter text-lg md:text-lg lg:text-xl">
+						saya adalah web developer frontend junior lulusan dari Universitas
+						Unindra PGRI Jakarta Teknik Informatika{" "}
+						<span className="hidden md:block">
+							yang tertarik dengan membuat website terutama bagian frontend,
+							selain itu juga mempunyai hobi bermain game.
+						</span>
 					</p>
 				</div>
 				<div className="hidden md:grid grid-cols-2 gap-3 items-center">

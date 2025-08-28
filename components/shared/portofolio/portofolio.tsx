@@ -9,7 +9,6 @@ const Portofolio = ({ page }: { page: string }) => {
 	// provide promise to client component
 	const categories = getCategories();
 	const projects = getPortofolios({
-		customArgs: { take: 6 },
 		page: Number(page),
 	});
 	const countProjects = getCountPortofolios();
@@ -18,7 +17,7 @@ const Portofolio = ({ page }: { page: string }) => {
 		<Section id="portofolio">
 			<HeaderSection
 				badgeText="Portofolio"
-				text={`Explore my portofolio of creative solutions`}
+				text={`Mari lihat-lihat portofolio yang saya buat`}
 			/>
 			<Suspense fallback={<ProjectsSkeleton />}>
 				<Projects

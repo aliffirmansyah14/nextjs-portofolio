@@ -13,7 +13,6 @@ const Pagination = ({
 }) => {
 	const totalData = use(itemCount);
 
-	console.log(totalData);
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
@@ -26,7 +25,7 @@ const Pagination = ({
 
 	if (limitPage < 2) return <></>;
 
-	if (page > limitPage) return <GoBackButton />;
+	if (page > limitPage) return <></>;
 
 	const createQueryString = (to: number) => {
 		params.set("page", to.toString());
@@ -81,25 +80,3 @@ const Pagination = ({
 };
 
 export default Pagination;
-
-const GoBackButton = () => {
-	const router = useRouter();
-	const pathname = usePathname();
-	console.log(pathname);
-	return (
-		<div className="mt-4 w-full flex justify-center items-center rounded">
-			<Button
-				variant={"ghost"}
-				size={"sm"}
-				className="rounded border-1"
-				onClick={() => {
-					router.push(`${pathname}?page=1`, {
-						scroll: false,
-					});
-				}}
-			>
-				Go back
-			</Button>
-		</div>
-	);
-};

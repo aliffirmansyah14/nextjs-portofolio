@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
-import { portofoliosType } from "../table-portofolio";
+import { PortofoliosType } from "./projects";
 
 // export type TechType =
 // 	| "Next JS"
@@ -16,7 +16,7 @@ import { portofoliosType } from "../table-portofolio";
 // 	category: string;
 // };
 
-type ProjectProps = portofoliosType;
+type ProjectProps = PortofoliosType;
 
 const Project = ({ name, redirectUrl, tech, imageUrl }: ProjectProps) => {
 	return (

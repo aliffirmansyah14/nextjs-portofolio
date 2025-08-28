@@ -3,7 +3,7 @@ import { formatDateToIndonesia, getMinMax } from "@/lib/utils";
 import ActionButtonPortofolioTable from "@/components/shared/dashboard/portofolio/actions-button-portofolio";
 import { getPortofolios } from "@/lib/api";
 import { MAX_TAKE, MIN_TAKE } from "@/lib/constants";
-import NotFoundButton from "./not-found-button";
+import NotFoundButton from "@/components/shared/not-found-button";
 
 type TablePortofolioProps = {
 	page: number | string;
@@ -28,12 +28,14 @@ const TablePortofolio = async ({
 					{
 						name: {
 							contains: searchParam,
+							mode: "insensitive",
 						},
 					},
 					{
 						category: {
 							name: {
 								contains: searchParam,
+								mode: "insensitive",
 							},
 						},
 					},
@@ -124,7 +126,7 @@ const TablePortofolio = async ({
 		);
 	}
 	return (
-		<div className="min-w-2xl h-auto md:h-[280px] grid place-content-center">
+		<div className="w-full h-auto mt-4 md:h-[280px] grid place-content-center">
 			<NotFoundButton />
 		</div>
 	);

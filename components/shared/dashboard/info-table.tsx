@@ -17,7 +17,7 @@ const InfoTable = async () => {
 			},
 			take: 6,
 			orderBy: {
-				createdAt: "asc",
+				createdAt: "desc",
 			},
 		},
 	});

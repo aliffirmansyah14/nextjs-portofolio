@@ -5,6 +5,7 @@ import Project from "./project";
 import Pagination from "../pagination";
 import { Prisma } from "@prisma/client";
 import { selectedRowProjects } from "@/lib/schema";
+import NotFoundButton from "../not-found-button";
 
 export type PortofoliosType = Prisma.ProjectGetPayload<{
 	select: typeof selectedRowProjects;
@@ -51,7 +52,7 @@ const Projects = ({ projects, categories, itemCount }: ProjectsProps) => {
 					})
 				) : (
 					<div className="col-span-1 md:col-span-2 lg:col-span-3 text-lg md:text-xl text-center">
-						Nothing...
+						<NotFoundButton />
 					</div>
 				)}
 			</div>

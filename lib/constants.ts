@@ -1,6 +1,6 @@
 import { LayoutDashboardIcon, SwatchBook } from "lucide-react";
 
-export const OFFSET_DATA = 3;
+export const OFFSET_DATA = 6;
 
 export const MAX_TAKE = 7;
 export const MIN_TAKE = 4;

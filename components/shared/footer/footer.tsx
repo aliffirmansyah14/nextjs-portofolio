@@ -1,11 +1,5 @@
 import Section from "@/components/shared/layout/section-layout";
-import {
-	ArrowRight,
-	FacebookIcon,
-	InstagramIcon,
-	TwitterIcon,
-} from "lucide-react";
-import Link from "next/link";
+import { ArrowRight, GithubIcon, InstagramIcon, MailIcon } from "lucide-react";
 import { Logo } from "../navbar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
@@ -25,6 +19,27 @@ const informations = [
 	},
 ];
 
+const sosmed = [
+	{
+		name: "instagrame",
+		link: "https://www.instagram.com/aliffsyh/",
+		color: "group-hover:text-pink-500 transition-colors",
+		icon: InstagramIcon,
+	},
+	{
+		name: "email",
+		link: "mailto:aliffirmansyah1407@gmail.com",
+		color: "group-hover:text-yellow-500 transition-colors",
+		icon: MailIcon,
+	},
+	{
+		name: "github",
+		link: "https://github.com/aliffirmansyah14/",
+		color: "group-hover:text-gray-600 transition-colors",
+		icon: GithubIcon,
+	},
+];
+
 const Footer = () => {
 	return (
 		<Section className="pb-3 md:pb-3 xl:pb-3 lg:pb-3">
@@ -39,34 +54,17 @@ const Footer = () => {
 					<div className="space-y-2">
 						<Logo size="lg" />
 						<p className="text-muted-foreground/60 max-w-sm text-sm md:text-[16px]">
-							a web developer specialising in frontend and website design
+							seorang frontend web developer junior
 						</p>
 					</div>
-					<ul className="flex items-center gap-4">
-						<Link href={"/"} className="group">
-							<figure>
-								<InstagramIcon
-									size={20}
-									className="group-hover:text-pink-500 transition-colors"
-								/>
-							</figure>
-						</Link>
-						<Link href={"/"} className="group">
-							<figure>
-								<TwitterIcon
-									size={20}
-									className="group-hover:text-blue-300 transition-colors"
-								/>
-							</figure>
-						</Link>
-						<Link href={"/"} className="group">
-							<figure>
-								<FacebookIcon
-									size={20}
-									className="group-hover:text-blue-600 transition-colors"
-								/>
-							</figure>
-						</Link>
+					<ul className="flex items-center gap-2">
+						{sosmed.map(s => (
+							<a key={s.name} target="_blank" href={s.link} className="group">
+								<figure>
+									<s.icon size={20} className={s.color} />
+								</figure>
+							</a>
+						))}
 					</ul>
 				</div>
 				<InformationsCard />
@@ -126,8 +124,9 @@ const InformationsCard = () => {
 const CopyRight = () => {
 	return (
 		<div className="pt-3 border-t border-accent text-center">
-			<p className="text-[9px] sm:text-[12px] md:text-sm text-nowrap">
-				All right reserved @alip. design inspired by @Duwi - dribble
+			<p className="text-[10px] sm:text-[12px] md:text-sm md:text-nowrap">
+				All right reserved @alip. design inspired by
+				<span className="block md:inline">@Duwi - dribble</span>
 			</p>
 		</div>
 	);
