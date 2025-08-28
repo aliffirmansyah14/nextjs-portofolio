@@ -1,21 +1,50 @@
-"use client";
-import { Prisma } from "@prisma/client";
-import { Badge } from "../ui/badge";
-import { use } from "react";
-import { selectedRowProjects } from "@/lib/schema";
-import { formatDateToIndonesia } from "@/lib/utils";
-import ActionButtonPortofolioTable from "./dashboard/portofolio/actions-button-portofolio";
-
-export type portofoliosType = Prisma.ProjectGetPayload<{
-	select: typeof selectedRowProjects;
-}>;
+import { Badge } from "@/components/ui/badge";
+import { formatDateToIndonesia, getMinMax } from "@/lib/utils";
+import ActionButtonPortofolioTable from "@/components/shared/dashboard/portofolio/actions-button-portofolio";
+import { getPortofolios } from "@/lib/api";
+import { MAX_TAKE, MIN_TAKE } from "@/lib/constants";
 
 type TablePortofolioProps = {
-	portofolios: Promise<portofoliosType[] | undefined>;
+	page: number | string;
+	take: number | string;
+	search: string;
 };
 
-const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
-	const allPortofolios = use(portofolios);
+const TablePortofolio = async ({
+	page,
+	take,
+	search,
+}: TablePortofolioProps) => {
+	const pageParam = Number(page) || 1;
+	const takeParam = getMinMax(Number(take) || 4, MIN_TAKE, MAX_TAKE);
+
+	const allPortofolios = await getPortofolios({
+		customArgs: {
+			take: takeParam,
+			where: {
+				OR: [
+					{
+						name: {
+							contains: search,
+						},
+					},
+					{
+						category: {
+							name: {
+								contains: search,
+							},
+						},
+					},
+					{
+						tech: {
+							has: search,
+						},
+					},
+				],
+			},
+		},
+		page: pageParam,
+	});
 
 	if (allPortofolios !== undefined && allPortofolios.length > 0) {
 		const columns = Object.keys(allPortofolios[0]).map(
@@ -23,7 +52,7 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 		);
 		columns.shift();
 		return (
-			<div className="min-w-2xl">
+			<div className="min-w-2xl h-auto md:h-[280px]">
 				<table className="w-full mt-4">
 					<thead>
 						<tr>
@@ -70,12 +99,12 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 								</td>
 								<td className="px-1 py-2 ">
 									<p className=" text-sm sm:text-base font-normal leading-none">
-										<span className="max-md:block lg:hidden ">
+										<span className="max-md:block md:hidden ">
 											{formatDateToIndonesia(portofolio.createdAt, {
 												dateStyle: "short",
 											})}
 										</span>
-										<span className="max-md:hidden lg:block">
+										<span className="max-md:hidden md:block">
 											{formatDateToIndonesia(portofolio.createdAt, {
 												dateStyle: "medium",
 											})}
@@ -119,13 +148,13 @@ const UrlRender = ({ url }: { url?: string | null }) => {
 				<div
 					className={`hidden group-hover/redirect:block absolute -top-10 text-xs bg-secondary px-3 py-2 rounded-2xl`}
 					style={{
-						left: `-${url.length}px`,
+						left: `-${url.length + 20}px`,
 					}}
 				>
 					<a
 						href={url}
 						target="_blank"
-						className="block hover:text-blue-600 hover:underline"
+						className="hover:text-blue-600 hover:underline"
 					>
 						{url}
 					</a>

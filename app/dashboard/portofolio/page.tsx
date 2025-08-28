@@ -4,29 +4,31 @@ import FormDeletePortofolio from "@/components/shared/dashboard/portofolio/form-
 import FormEditPortofolio from "@/components/shared/dashboard/portofolio/form-edit-portofolio";
 import SiderbarTriggerMobile from "@/components/shared/dashboard/sidebar/sidebar-trigger-mobile";
 import SkeletonTable from "@/components/shared/skeleton-table";
-import TablePortofolio from "@/components/shared/table-portofolio";
+
 import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardAction,
 	CardContent,
+	CardFooter,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { getCategories, getPortofolios } from "@/lib/api";
+import { getCategories, getCountPortofolios, getPortofolios } from "@/lib/api";
 import { Plus } from "lucide-react";
 import { Suspense } from "react";
+import PaginationTable from "@/components/shared/dashboard/portofolio/pagination";
+import TablePortofolio from "@/components/shared/dashboard/portofolio/table-portofolio";
 
 const PortofolioPage = async ({
 	searchParams,
 }: {
-	searchParams: Promise<{ page?: string }>;
+	searchParams: Promise<{ page?: string; take?: string; search?: string }>;
 }) => {
-	const { page = "1" } = await searchParams;
-	const portofolios = getPortofolios({
-		customArgs: { take: 4 },
-		page: Number(page),
-	});
+	const { page = "1", take = "4", search = "" } = await searchParams;
+
+	const totalDataPortofolios = await getCountPortofolios(search);
+
 	const categories = getCategories();
 
 	return (
@@ -41,7 +43,7 @@ const PortofolioPage = async ({
 				/>
 			</header>
 			<div className="mt-4 sm:px-2 md:px-0">
-				<Card>
+				<Card className="gap-4 overflow-hidden">
 					<CardHeader>
 						<CardTitle>
 							<h2 className=" text-3xl font-semibold">Portofolios</h2>
@@ -58,12 +60,15 @@ const PortofolioPage = async ({
 							</Suspense>
 						</CardAction>
 					</CardHeader>
-					<CardContent className="overflow-x-auto border-t py-2 lg:scroll-h-sm lg:scroll-track-dark">
+					<CardContent className="overflow-auto border-t py-2 lg:scroll-w-sm lg:scroll-h-sm lg:scroll-track-dark">
 						<Suspense fallback={<SkeletonTable row={4} col={6} />}>
-							<TablePortofolio portofolios={portofolios} />
+							<TablePortofolio page={page} take={take} search={search} />
 						</Suspense>
 					</CardContent>
 					{/* <div className="mt-4 overflow-x-auto scroll-h-sm scroll-track-dark"></div> */}
+					<CardFooter>
+						<PaginationTable limitData={totalDataPortofolios || 0} />
+					</CardFooter>
 				</Card>
 			</div>
 			<FormEditPortofolio categories={categories} />

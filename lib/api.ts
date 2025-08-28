@@ -42,6 +42,7 @@ export const getPortofolios = cache(
 				}
 
 				const portofolios = await prisma.project.findMany({
+					...props.customArgs,
 					select: props.customArgs?.select || selectedRowDefault,
 					take: props.customArgs?.take || OFFSET_DATA,
 					skip:
@@ -89,9 +90,31 @@ export const getPortofolioById = cache(
 	}
 );
 
-export const getCountPortofolios = cache(async () => {
+export const getCountPortofolios = cache(async (query?: string) => {
 	try {
-		return await prisma.project.count();
+		return await prisma.project.count({
+			where: {
+				OR: [
+					{
+						name: {
+							contains: query,
+						},
+					},
+					{
+						category: {
+							name: {
+								contains: query,
+							},
+						},
+					},
+					{
+						tech: {
+							has: query,
+						},
+					},
+				],
+			},
+		});
 	} catch (error) {
 		console.log("error di count portofolios " + error);
 	}
