@@ -37,9 +37,11 @@ const Navbar = () => {
 						return <NavbarLink key={index} active={isLinkActive} {...link} />;
 					})}
 					{session ? (
-						<ProgressLink href="/dashboard">
-							<LayoutDashboardIcon />
-						</ProgressLink>
+						<li>
+							<ProgressLink href="/dashboard" aria-label="dashboard-link">
+								<LayoutDashboardIcon />
+							</ProgressLink>
+						</li>
 					) : null}
 				</ul>
 				<MenuButton onClick={handleOnClickMenu} type="dekstop">
@@ -134,6 +136,7 @@ const MenuButton = ({
 }: MenuButtonProps) => {
 	return (
 		<button
+			aria-label="nav-button"
 			className={cn(
 				"md:hidden p-2 flex items-center  rounded-xl cursor-pointer group",
 				type === "dekstop" ? "hover:bg-accent active:bg-accent" : ""
@@ -175,23 +178,27 @@ const NavigasiMenuMobile = ({
 			<ul className="space-y-3 px-4 ">
 				{links.map((link, index) => {
 					return (
-						<Link
-							key={index}
-							href={link.href}
-							className="border-b block  px-2 py-1 capitalize hover:bg-accent active:bg-accent"
-						>
-							{link.label.toLocaleLowerCase()}
-						</Link>
+						<li key={index}>
+							<Link
+								href={link.href}
+								className="border-b block  px-2 py-1 capitalize hover:bg-accent active:bg-accent"
+							>
+								{link.label.toLocaleLowerCase()}
+							</Link>
+						</li>
 					);
 				})}
 				{isLogin && (
-					<ProgressLink
-						href="/dashboard"
-						className="border-b block  px-2 py-1 capitalize hover:bg-accent active:bg-accent"
-						callback={() => setOverFlowHBody()}
-					>
-						Dashboard
-					</ProgressLink>
+					<li>
+						<ProgressLink
+							href="/dashboard"
+							aria-label="dashboard-link"
+							className="border-b block  px-2 py-1 capitalize hover:bg-accent active:bg-accent"
+							callback={() => setOverFlowHBody()}
+						>
+							Dashboard
+						</ProgressLink>
+					</li>
 				)}
 			</ul>
 		</nav>

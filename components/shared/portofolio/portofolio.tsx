@@ -5,14 +5,11 @@ import ProjectsSkeleton from "./project-skeleton";
 import { getCategories, getCountPortofolios, getPortofolios } from "@/lib/api";
 import Projects from "./projects";
 
-const Portofolio = ({ page }: { page: string }) => {
+const Portofolio = () => {
 	// provide promise to client component
 	const categories = getCategories();
-	const projects = getPortofolios({
-		page: Number(page),
-	});
+	const projects = getPortofolios();
 	const countProjects = getCountPortofolios();
-
 	return (
 		<Section id="portofolio">
 			<HeaderSection

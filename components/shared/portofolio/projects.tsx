@@ -6,6 +6,7 @@ import Pagination from "../pagination";
 import { Prisma } from "@prisma/client";
 import { selectedRowProjects } from "@/lib/schema";
 import NotFoundButton from "../not-found-button";
+import { OFFSET_DATA } from "@/lib/constants";
 
 export type PortofoliosType = Prisma.ProjectGetPayload<{
 	select: typeof selectedRowProjects;
@@ -21,16 +22,29 @@ const Projects = ({ projects, categories, itemCount }: ProjectsProps) => {
 	const allProjects = use(projects);
 	const allCategories = use(categories);
 	const [isTabActive, setIsTabActive] = useState<string>("all");
+	const [page, setPage] = useState<number>(1);
 
 	const handleOnClickTab = (selectedCategory: string) => {
 		setIsTabActive(selectedCategory);
 	};
 
+	const next = () => {
+		setPage(prev => prev + 1);
+	};
+	const back = () => {
+		setPage(prev => prev - 1);
+	};
+
+	const slicesProjects =
+		page === 1
+			? allProjects?.slice((page - 1) * OFFSET_DATA, OFFSET_DATA)
+			: allProjects?.slice((page - 1) * OFFSET_DATA - 1, OFFSET_DATA);
+
 	const filteredProjects =
 		allProjects !== undefined
 			? allProjects.length > 0 && isTabActive === "all"
-				? allProjects
-				: allProjects.filter(
+				? slicesProjects
+				: slicesProjects?.filter(
 						p => p.category.name.toLowerCase() === isTabActive.toLowerCase()
 				  )
 			: [];
@@ -43,7 +57,12 @@ const Projects = ({ projects, categories, itemCount }: ProjectsProps) => {
 					onClick={handleOnClickTab}
 					isActive={isTabActive}
 				/>
-				<Pagination itemCount={itemCount} />
+				<Pagination
+					onBack={back}
+					onNext={next}
+					page={page}
+					itemCount={itemCount}
+				/>
 			</div>
 			<div className="mt-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
 				{filteredProjects && filteredProjects.length > 0 ? (

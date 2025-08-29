@@ -8,7 +8,7 @@ const SkeletonTable = ({ row = 3, col = 4 }: SkeletonTableProps) => {
 	const rows = Array.from({ length: row });
 
 	return (
-		<table className="w-full">
+		<table className="w-full h-auto md:h-[280px] mt-4">
 			<thead>
 				<tr>
 					{cols.map((_, i) => {

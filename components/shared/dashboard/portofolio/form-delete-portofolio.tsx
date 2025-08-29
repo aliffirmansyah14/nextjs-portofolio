@@ -14,12 +14,17 @@ import {
 } from "@/components/ui/dialog";
 import { deletePortofolioById } from "@/lib/action";
 import { useActionPortofolio } from "@/store/action-portofolio";
-import { useRef, useTransition } from "react";
+import { useEffect, useRef, useTransition } from "react";
 
 const FormDeletePortofolio = () => {
 	const { actionIdPortofolio } = useActionPortofolio();
 	const [isPending, startTransition] = useTransition();
 	const buttonCloseRef = useRef<HTMLButtonElement>(null);
+
+	useEffect(() => {
+		if (!isPending) buttonCloseRef.current?.click();
+		return;
+	}, [isPending]);
 
 	return (
 		<Dialog>
@@ -32,14 +37,20 @@ const FormDeletePortofolio = () => {
 			</DialogTrigger>
 			<DialogContent showCloseButton={false}>
 				<form
-					action={async () => {
+					action={async formData => {
 						startTransition(async () => {
 							if (!actionIdPortofolio) return;
-							await deletePortofolioById(actionIdPortofolio);
-							buttonCloseRef.current?.click();
+							await deletePortofolioById(formData);
 						});
 					}}
 				>
+					<input
+						type="text"
+						name="id"
+						defaultValue={actionIdPortofolio || ""}
+						className="hidden"
+						aria-hidden
+					/>
 					<DialogHeader>
 						<DialogTitle>Apakah anda yakin</DialogTitle>
 						<DialogDescription

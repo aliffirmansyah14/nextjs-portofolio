@@ -8,17 +8,16 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Pagination = ({
 	itemCount,
+	onNext,
+	onBack,
+	page,
 }: {
+	onNext: () => void;
+	onBack: () => void;
 	itemCount: Promise<number | undefined>;
+	page: number;
 }) => {
 	const totalData = use(itemCount);
-
-	const router = useRouter();
-	const pathname = usePathname();
-	const searchParams = useSearchParams();
-	const params = new URLSearchParams(searchParams.toString());
-	const page = Number(params.get("page")) || 1;
-
 	if (!totalData) return <></>;
 
 	const limitPage = Math.ceil(totalData / OFFSET_DATA);
@@ -27,22 +26,12 @@ const Pagination = ({
 
 	if (page > limitPage) return <></>;
 
-	const createQueryString = (to: number) => {
-		params.set("page", to.toString());
-
-		return params.toString();
-	};
-
 	const handleClickArrow = (arrow: "left" | "right") => {
 		if (arrow === "right") {
-			router.push(`${pathname}?${createQueryString(page + 1)}`, {
-				scroll: false,
-			});
+			onNext();
 			return;
 		}
-		router.push(`${pathname}?${createQueryString(page - 1)}`, {
-			scroll: false,
-		});
+		onBack();
 	};
 
 	return (
@@ -53,6 +42,7 @@ const Pagination = ({
 					return (
 						<Button
 							key={i}
+							aria-label="next-button"
 							variant="outline"
 							className="rounded"
 							disabled={page === limitPage}
@@ -66,6 +56,7 @@ const Pagination = ({
 						<Button
 							key={i}
 							variant="outline"
+							aria-label="back-button"
 							className="rounded"
 							disabled={page === 1}
 							onClick={() => handleClickArrow(arrow)}

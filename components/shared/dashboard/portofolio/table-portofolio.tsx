@@ -1,13 +1,13 @@
 import { Badge } from "@/components/ui/badge";
-import { formatDateToIndonesia, getMinMax } from "@/lib/utils";
+import { formatDateToIndonesia } from "@/lib/utils";
 import ActionButtonPortofolioTable from "@/components/shared/dashboard/portofolio/actions-button-portofolio";
 import { getPortofolios } from "@/lib/api";
-import { MAX_TAKE, MIN_TAKE } from "@/lib/constants";
+
 import NotFoundButton from "@/components/shared/not-found-button";
 
 type TablePortofolioProps = {
 	page: number | string;
-	take: number | string;
+	take: number;
 	search: string;
 };
 
@@ -17,8 +17,8 @@ const TablePortofolio = async ({
 	search,
 }: TablePortofolioProps) => {
 	const pageParam = Number(page) || 1;
-	const takeParam = getMinMax(Number(take) || 4, MIN_TAKE, MAX_TAKE);
 	const searchParam = search || "";
+	const takeParam = take;
 
 	const allPortofolios = await getPortofolios({
 		customArgs: {
@@ -45,6 +45,9 @@ const TablePortofolio = async ({
 						},
 					},
 				],
+			},
+			orderBy: {
+				updateAt: "desc",
 			},
 		},
 		page: pageParam,
@@ -127,7 +130,7 @@ const TablePortofolio = async ({
 	}
 	return (
 		<div className="w-full h-auto mt-4 md:h-[280px] grid place-content-center">
-			<NotFoundButton />
+			<NotFoundButton isRouteBack={true} />
 		</div>
 	);
 };
@@ -150,7 +153,7 @@ const UrlRender = ({ url }: { url?: string | null }) => {
 			</p>
 			{url && (
 				<div
-					className={`hidden group-hover/redirect:block absolute -top-10 text-xs bg-secondary px-3 py-2 rounded-2xl`}
+					className={`hidden group-active::block group-hover/redirect:block absolute -top-10 text-xs bg-secondary px-3 py-2 rounded-2xl`}
 					style={{
 						left: `-${url.length + 20}px`,
 					}}
