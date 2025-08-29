@@ -1,12 +1,12 @@
+import { PortofoliosType } from "@/components/shared/portofolio/projects";
 import { create } from "zustand";
-import { portofoliosType } from "@/components/shared/table-portofolio";
 interface PortofolioState {
-	actionPortofolio: portofoliosType | null;
+	actionPortofolio: PortofoliosType | null;
 	actionIdPortofolio: string | null;
 }
 
 interface PortofolioAction {
-	setActionPortofolio: (portofolio: portofoliosType | null) => void;
+	setActionPortofolio: (portofolio: PortofoliosType | null) => void;
 	setActionIdPortofolio: (id: string | null) => void;
 }
 

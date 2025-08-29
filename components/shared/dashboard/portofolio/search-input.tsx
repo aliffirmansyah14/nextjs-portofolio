@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import {
 	Dialog,
 	DialogContent,
+	DialogDescription,
 	DialogOverlay,
 	DialogTitle,
 	DialogTrigger,
@@ -12,7 +13,7 @@ import { createQueryString } from "@/lib/utils";
 import { Search } from "lucide-react";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 
 const SearchInput = () => {
 	const router = useRouter();
@@ -37,6 +38,7 @@ const SearchInput = () => {
 			</DialogTrigger>
 			<DialogContent className="rounded-2xl bg-sidebar">
 				<DialogTitle>Search potofolio</DialogTitle>
+				<DialogDescription>by a name,category name, and tag </DialogDescription>
 				<form
 					onSubmit={e => {
 						e.preventDefault();

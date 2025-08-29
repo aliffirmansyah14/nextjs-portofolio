@@ -20,7 +20,9 @@ const HeaderSection = ({
 						</span>
 						{text.split(" ").splice(1).join(" ")}
 					</h2>
-					<p className="text-base tracking-tight text-primary">{text}</p>
+					<p className="text-base tracking-tight text-muted-foreground">
+						{text}
+					</p>
 				</div>
 			)}
 		</div>

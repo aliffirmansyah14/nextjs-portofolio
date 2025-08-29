@@ -46,6 +46,9 @@ const TablePortofolio = async ({
 					},
 				],
 			},
+			orderBy: {
+				updateAt: "desc",
+			},
 		},
 		page: pageParam,
 	});
@@ -127,7 +130,7 @@ const TablePortofolio = async ({
 	}
 	return (
 		<div className="w-full h-auto mt-4 md:h-[280px] grid place-content-center">
-			<NotFoundButton />
+			<NotFoundButton isRouteBack={true} />
 		</div>
 	);
 };

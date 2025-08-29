@@ -11,23 +11,28 @@ import {
 import { MAX_TAKE, MIN_TAKE } from "@/lib/constants";
 import { createQueryString, getMinMax } from "@/lib/utils";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useCallback } from "react";
 
-const TakeSelect = ({ take }: { take: number }) => {
+const TakeSelect = () => {
 	const router = useRouter();
 	const pathname = usePathname();
 	const searchParams = useSearchParams();
 	const params = new URLSearchParams(searchParams.toString());
+	const take = getMinMax(Number(params.get("take")) || 4, MIN_TAKE, MAX_TAKE);
 
-	const handleOnChangeSelect = (selected: string) => {
-		const value = getMinMax(Number(selected), MIN_TAKE, MAX_TAKE);
+	const handleOnChangeSelect = useCallback(
+		(selected: string) => {
+			const value = Number(selected);
 
-		router.push(
-			`${pathname}?${createQueryString(params, value.toString(), "take")}`,
-			{
-				scroll: false,
-			}
-		);
-	};
+			router.push(
+				`${pathname}?${createQueryString(params, value.toString(), "take")}`,
+				{
+					scroll: false,
+				}
+			);
+		},
+		[searchParams]
+	);
 	return (
 		<Select
 			onValueChange={value => handleOnChangeSelect(value)}

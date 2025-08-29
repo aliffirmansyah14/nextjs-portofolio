@@ -24,7 +24,7 @@ const PortofolioPage = async ({
 }: {
 	searchParams: Promise<{ page?: string; take?: string; search?: string }>;
 }) => {
-	const { page = "1", take = "4", search = " " } = await searchParams;
+	const { page = "1", take = "4", search = "" } = await searchParams;
 	const takeParam = getMinMax(Number(take), MIN_TAKE, MAX_TAKE);
 
 	const totalDataPortofolios = await getCountPortofolios(search);
@@ -50,7 +50,7 @@ const PortofolioPage = async ({
 			{/* <div className="mt-4 overflow-x-auto scroll-h-sm scroll-track-dark"></div> */}
 			<CardFooter className="flex items-center md:justify-between w-full gap-x-2">
 				<div className="order-2 ml-auto md:ml-0 md:order-1">
-					<TakeSelect key={takeParam} take={takeParam} />
+					<TakeSelect />
 				</div>
 				<div className=" md:ms-0 order-1 md:order-2">
 					<PaginationTable limitData={totalDataPortofolios || 0} />

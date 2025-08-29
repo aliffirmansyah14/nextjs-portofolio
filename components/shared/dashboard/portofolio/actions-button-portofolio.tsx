@@ -8,14 +8,14 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useActionPortofolio } from "@/store/action-portofolio";
-import { portofoliosType } from "../../table-portofolio";
 import { EllipsisVertical } from "lucide-react";
 import { useShallow } from "zustand/react/shallow";
+import { PortofoliosType } from "../../portofolio/projects";
 
 const ActionButtonPortofolioTable = ({
 	portofolio,
 }: {
-	portofolio: portofoliosType;
+	portofolio: PortofoliosType;
 }) => {
 	const { setActionPortofolio, setActionIdPortofolio } = useActionPortofolio(
 		useShallow(state => ({

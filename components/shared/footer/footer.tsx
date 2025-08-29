@@ -44,26 +44,33 @@ const Footer = () => {
 	return (
 		<Section className="pb-3 md:pb-3 xl:pb-3 lg:pb-3">
 			<div className="flex justify-between flex-wrap gap-y-4 sm:flex-nowrap items-center md:items-start">
-				<h5 className="text-white text-2xl md:text-4xl lg:text-6xl max-w-lg">
+				<h1 className="text-white text-2xl md:text-4xl lg:text-6xl max-w-lg">
 					Let's Connect There
-				</h5>
+				</h1>
 				<ButtonHireMe />
 			</div>
 			<div className="grid grid-cols-1 xl:grid-cols-2 gap-y-5 mt-20 border-t border-accent py-10">
 				<div className="space-y-4">
 					<div className="space-y-2">
 						<Logo size="lg" />
-						<p className="text-muted-foreground/60 max-w-sm text-sm md:text-[16px]">
+						<p className="text-muted-foreground max-w-sm text-sm md:text-[16px]">
 							seorang frontend web developer junior
 						</p>
 					</div>
 					<ul className="flex items-center gap-2">
 						{sosmed.map(s => (
-							<a key={s.name} target="_blank" href={s.link} className="group">
-								<figure>
-									<s.icon size={20} className={s.color} />
-								</figure>
-							</a>
+							<li key={s.name}>
+								<a
+									aria-label="sosmed-link"
+									target="_blank"
+									href={s.link}
+									className="group"
+								>
+									<figure>
+										<s.icon size={20} className={s.color} />
+									</figure>
+								</a>
+							</li>
 						))}
 					</ul>
 				</div>
@@ -100,14 +107,14 @@ const InformationsCard = () => {
 						<CardHeader className="text-nowrap text-sm px-0">
 							{information.header}
 						</CardHeader>
-						<CardContent className="space-y-1 px-0">
+						<CardContent className="space-y-2 px-0">
 							{information.content.map((content, i) => {
 								const Comp = information.tag !== undefined ? "a" : "p";
 								return (
 									<Comp
 										key={i}
 										href={Comp === "a" ? `mailto:${content}` : undefined}
-										className="text-nowrap text-muted-foreground/60 text-xs block"
+										className="text-nowrap text-muted-foreground text-xs block"
 									>
 										{content}
 									</Comp>
