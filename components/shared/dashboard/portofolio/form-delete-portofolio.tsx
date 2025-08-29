@@ -32,14 +32,21 @@ const FormDeletePortofolio = () => {
 			</DialogTrigger>
 			<DialogContent showCloseButton={false}>
 				<form
-					action={async () => {
+					action={async formData => {
 						startTransition(async () => {
 							if (!actionIdPortofolio) return;
-							await deletePortofolioById(actionIdPortofolio);
-							buttonCloseRef.current?.click();
+							await deletePortofolioById(formData);
 						});
+						buttonCloseRef.current?.click();
 					}}
 				>
+					<input
+						type="text"
+						name="id"
+						defaultValue={actionIdPortofolio || ""}
+						className="hidden"
+						aria-hidden
+					/>
 					<DialogHeader>
 						<DialogTitle>Apakah anda yakin</DialogTitle>
 						<DialogDescription

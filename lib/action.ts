@@ -92,10 +92,9 @@ export const seedCreateCaregory = async () => {
 
 export const createPortofolio = async (
 	prevState: unknown,
-	formData: FormData
+	formData: unknown
 ) => {
-	const isLogin = await isUserLogin();
-	if (!isLogin) return;
+	if (!(formData instanceof FormData)) return;
 
 	const createFormdata: createPortofolioFormType = {
 		name: formData.get("name") as string,
@@ -153,8 +152,7 @@ export const editPortofolio = async (
 	prevState: unknown,
 	formData: FormData
 ) => {
-	const isLogin = await isUserLogin();
-	if (!isLogin) return;
+	if (!(formData instanceof FormData)) return;
 
 	if (!idProject) return;
 	const image = formData.get("image");
@@ -240,9 +238,11 @@ export const editPortofolio = async (
 	revalidatePath("/dashboard/portofolio");
 };
 
-export const deletePortofolioById = async (id: string) => {
-	const isLogin = await isUserLogin();
-	if (!isLogin) return;
+export const deletePortofolioById = async (formData: unknown) => {
+	if (!(formData instanceof FormData)) return;
+
+	const id = formData.get("id") as string;
+	if (!id) return;
 
 	const portofolio = await getPortofolioById(id, { imageUrl: true });
 	try {

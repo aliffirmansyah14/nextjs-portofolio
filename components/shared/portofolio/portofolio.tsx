@@ -19,7 +19,7 @@ const Portofolio = ({ page }: { page: string }) => {
 				badgeText="Portofolio"
 				text={`Mari lihat-lihat portofolio yang saya buat`}
 			/>
-			<Suspense fallback={<ProjectsSkeleton />}>
+			<Suspense key={page} fallback={<ProjectsSkeleton />}>
 				<Projects
 					categories={categories}
 					projects={projects}

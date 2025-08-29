@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus } from "lucide-react";
 import { use, useActionState } from "react";
 import { createPortofolio } from "@/lib/action";
 import SelectCategory from "./select-category";
@@ -33,9 +32,7 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 		<Dialog>
 			<DialogOverlay />
 			<DialogTrigger asChild>
-				<Button variant="outline" className="rounded-xl">
-					Add <Plus />
-				</Button>
+				<button className="hidden" id="trigger-button-add-portofolio" />
 			</DialogTrigger>
 
 			<DialogContent className="sm:max-w-[425px] rounded-xl">

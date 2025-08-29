@@ -8,7 +8,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import useDebounceValue from "@/hooks/useDebounceValue";
 import { createQueryString } from "@/lib/utils";
 import { Search } from "lucide-react";
 
@@ -41,12 +40,17 @@ const SearchInput = () => {
 				<form
 					onSubmit={e => {
 						e.preventDefault();
-						router.push(
-							`${pathname}?${createQueryString(params, text, "search")}`,
-							{
-								scroll: false,
-							}
-						);
+						if (!text) {
+							params.delete("search");
+							router.push(`${pathname}?${params.toString()}`);
+						} else {
+							router.push(
+								`${pathname}?${createQueryString(params, text, "search")}`,
+								{
+									scroll: false,
+								}
+							);
+						}
 						setText("");
 						setIsOpen(false);
 					}}
