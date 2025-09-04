@@ -32,23 +32,12 @@ export type createPortofolioFormType = z.infer<
 	typeof createPortofolioFormSchema
 >;
 
-export const editPortofolioWithFileFormSchema = z.object({
-	name: z.string().min(1, "At least 1 character"),
-	category: z.string().min(1, "required"),
-	tech: z.array(z.string()),
-	redirectUrl: z.string(),
-	image: imageZod,
-});
-
-export type editPortofolioWithFileFormType = z.infer<
-	typeof editPortofolioWithFileFormSchema
->;
 export const editPortofolioFormSchema = z.object({
 	name: z.string().min(1, "At least 1 character"),
 	category: z.string().min(1, "required"),
-	tech: z.array(z.string()),
+	tech: z.string().min(1, "At least 1 character"),
 	redirectUrl: z.string(),
-	image: z.string().optional(),
+	imageUrl: z.string().optional().nullable(),
 });
 
 export type editPortofolioType = z.infer<typeof editPortofolioFormSchema>;

@@ -12,7 +12,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { use, useEffect, useState } from "react";
+import { use, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import {
@@ -30,15 +30,14 @@ import {
 import SelectCategory from "./select-category";
 import { createPortofolio, uploadImageToBlob } from "@/lib/action";
 import UploadImage from "./upload-image";
-import { CheckCircle2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import LoadingSpinner from "./loading-spinner";
+import AlertForm from "./alert-form";
 
 type FormAddPortofolioProps = {
 	categories: Promise<{ id: string; name: string }[]>;
 };
 
-const defaultValuePortofolio = {
+export const defaultValuePortofolio = {
 	category: "",
 	name: "",
 	redirectUrl: "",
@@ -238,33 +237,3 @@ const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 };
 
 export default FormAddPortofolio;
-
-const AlertForm = ({
-	message,
-	onClose,
-}: {
-	message: string;
-	onClose?: () => void;
-}) => {
-	const [active, setIsActive] = useState<boolean>(message !== "");
-	useEffect(() => {
-		const timout = setTimeout(() => {
-			setIsActive(false);
-			onClose?.();
-		}, 3000);
-		return () => clearTimeout(timout);
-	}, []);
-	return (
-		<div
-			className={cn(
-				"bg-green-400/30 flex gap-x-2 py-3 px-2 rounded items-center",
-				{
-					hidden: !active,
-				}
-			)}
-		>
-			<CheckCircle2 className="size-8" />
-			<p>{message}</p>
-		</div>
-	);
-};

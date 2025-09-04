@@ -9,25 +9,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useActionPortofolio } from "@/store/action-portofolio";
 import { EllipsisVertical } from "lucide-react";
-import { useShallow } from "zustand/react/shallow";
 import { PortofoliosType } from "../../portofolio/projects";
+import { useRouter } from "next/navigation";
 
 const ActionButtonPortofolioTable = ({
 	portofolio,
 }: {
 	portofolio: PortofoliosType;
 }) => {
-	const { setActionPortofolio, setActionIdPortofolio } = useActionPortofolio(
-		useShallow(state => ({
-			setActionPortofolio: state.setActionPortofolio,
-			setActionIdPortofolio: state.setActionIdPortofolio,
-		}))
+	const router = useRouter();
+	const setActionIdPortofolio = useActionPortofolio(
+		state => state.setActionIdPortofolio
 	);
 
 	const handleClickEditButton = () => {
-		setActionPortofolio(portofolio);
-		setActionIdPortofolio(portofolio.id);
-		document.getElementById("trigger-edit-portofolio")?.click();
+		router.push(`/dashboard/portofolio/edit/${portofolio.id}`);
 	};
 	const handleClickDeleteButton = () => {
 		setActionIdPortofolio(portofolio.id);

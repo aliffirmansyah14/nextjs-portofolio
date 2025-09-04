@@ -4,8 +4,9 @@ import { Input } from "@/components/ui/input";
 import Image from "next/image";
 import { useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { X } from "lucide-react";
+import { Trash2, X } from "lucide-react";
 import { cn } from "@/lib/utils";
+import PreviewImage from "./preview-image";
 
 export type ResponseUploadType = {
 	message?: string;
@@ -13,74 +14,31 @@ export type ResponseUploadType = {
 	success: boolean;
 	url?: string;
 };
-// const initialResponse: ResponseUploadType = {
-// 	success: false,
-// };
 
 type UploadImageProps = {
-	isError: boolean;
-	onChange: (file: File[]) => void;
+	isError?: boolean;
+	onChange?: (file: File[]) => void;
 	isPreviewOpen: boolean;
-	image?: File;
-	onClose: () => void;
-	// onError?: (response: ResponseUploadType) => void;
-	// onSucess?: () => void;
+	image?: File | string;
+	onClose?: () => void;
+	Icon?: React.ReactNode;
 };
 
 const UploadImage = ({
+	Icon,
 	onChange,
 	isError,
 	image,
 	isPreviewOpen,
 	onClose,
 }: UploadImageProps) => {
-	// const [_, startTransition] = useTransition();
-	// const [result, setResult] = useState<ResponseUploadType>(initialResponse);
 	const { getRootProps, getInputProps } = useDropzone({
 		onDrop: onChange,
 	});
 
-	// const valiadteImage = (file: File) => {
-	// 	const parsed = uploadImageSchema.safeParse({ image: file });
-	// 	if (!parsed.success) {
-	// 		setResult({
-	// 			errors: { ...parsed.error.flatten().fieldErrors },
-	// 			success: false,
-	// 		});
-	// 		setImage(undefined);
-	// 		setPreviewImage("");
-	// 		return;
-	// 	}
-	// 	setImage(file);
-	// 	setPreviewImage(URL.createObjectURL(file));
-	// };
-
-	// const handleOnUploadChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-	// 	if (!e.target.files) return;
-	// 	const file = e.target.files[0];
-	// 	valiadteImage(file);
-	// };
-
-	// const handleUploadingImage = async () => {
-	// 	if (!image) return;
-	// 	startTransition(async () => {
-	// 		const response = await uploadImageToBlob(image);
-	// 		if (response.success) {
-	// 			onSucess?.();
-	// 			return;
-	// 		}
-	// 		onError?.(response as ResponseUploadType);
-	// 		// setResult(response as ResponseType);
-	// 	});
-	// };
-
 	const handleOnClickClose = () => {
-		onClose();
+		onClose?.();
 	};
-	// const dialogOnClose = () => {
-	// 	setResult(initialResponse);
-	// 	setPreviewImage("");
-	// };
 
 	return (
 		<div>
@@ -120,29 +78,7 @@ const UploadImage = ({
 					</div>
 				</>
 			) : (
-				<div className="w-full flex justify-between bg-secondary gap-x-2 py-2 px-3 border border-input ">
-					<div className="flex-1 flex  gap-x-2">
-						<Image
-							width={50}
-							height={50}
-							src={URL.createObjectURL(image as File)}
-							alt="preview-image"
-							className="h-[50px] rounded"
-						/>
-						<div className="space-y-1">
-							<p className="text-sm">{image?.name}</p>
-							<p className="text-sm">{image?.size && image?.size / 8} kb</p>
-						</div>
-					</div>
-					<Button
-						type="button"
-						variant={"ghost"}
-						className="size-6 rounded-full"
-						onClick={() => handleOnClickClose()}
-					>
-						<X className="size-4" />
-					</Button>
-				</div>
+				<PreviewImage image={image} onClose={handleOnClickClose} Icon={Icon} />
 			)}
 		</div>
 
