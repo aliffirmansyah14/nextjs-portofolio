@@ -14,7 +14,7 @@ const DashboardPage = () => {
 	return (
 		<div className={`px-4`} id="dashboard-content">
 			<Header text="Dashboard" />
-			<div className="md:px-2 mt-4 grid md:grid-cols-2 gap-4">
+			<div className="mt-4 grid md:grid-cols-2 gap-4">
 				<Suspense fallback={<SkeletonCard />}>
 					<PortofolioCard />
 				</Suspense>
@@ -28,7 +28,7 @@ const DashboardPage = () => {
 					<ChartPieCategory fetchCategory={categoriesWithCount} />
 				</Suspense>
 			</div>
-			<div className="md:px-2 py-5">
+			<div className="py-5">
 				<Suspense fallback={<SkeletonTable row={5} col={3} />}>
 					<InfoTable />
 				</Suspense>

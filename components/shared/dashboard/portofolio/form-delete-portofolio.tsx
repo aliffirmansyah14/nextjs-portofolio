@@ -67,6 +67,7 @@ const FormDeletePortofolio = () => {
 								ref={buttonCloseRef}
 								variant="outline"
 								className="rounded-xl"
+								disabled={isPending}
 							>
 								Close
 							</Button>

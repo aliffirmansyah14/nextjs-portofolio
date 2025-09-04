@@ -1,239 +1,276 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { startTransition, use, useState } from "react";
+import { useForm } from "react-hook-form";
 import {
-	Dialog,
-	DialogClose,
-	DialogContent,
-	DialogFooter,
-	DialogHeader,
-	DialogOverlay,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+	editPortofolioFormSchema,
+	editPortofolioType,
+	uploadImageSchema,
+} from "@/lib/schema";
+import { zodResolver } from "@hookform/resolvers/zod";
+import LoadingSpinner from "./loading-spinner";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { DialogDescription } from "@radix-ui/react-dialog";
-import { startTransition, use, useEffect, useState } from "react";
 import SelectCategory from "./select-category";
-import { useActionPortofolio } from "@/store/action-portofolio";
-import Image from "next/image";
-import clsx from "clsx";
-import { editPortofolio } from "@/lib/action";
-import { useResettableActionState } from "@/hooks/useResettableActionState";
+import { PortofolioType } from "@/app/dashboard/portofolio/edit/[id]/page";
+import { useRouter } from "next/navigation";
+import NotFoundButton from "../../not-found-button";
+import UploadImage from "./upload-image";
+import AlertForm from "./alert-form";
+import {
+	deleteImageInBlob,
+	editPortofolio,
+	uploadImageToBlob,
+} from "@/lib/action";
+import { Trash2 } from "lucide-react";
 
 type FormEditPortofolioProps = {
 	categories: Promise<{ id: string; name: string }[]>;
+	portofolio: Promise<PortofolioType>;
 };
 
-const FormEditPortofolio = ({ categories }: FormEditPortofolioProps) => {
-	const [isImageEdit, setIsImageEdit] = useState<boolean>(false);
+const FormEditPortofolio = ({
+	categories,
+	portofolio,
+}: FormEditPortofolioProps) => {
+	const dataPortofolio = use(portofolio);
 	const allCategories = use(categories);
-	const { actionPortofolio, setActionPortofolio, actionIdPortofolio } =
-		useActionPortofolio();
-	const [state, formAction, isPending, reset] = useResettableActionState(
-		editPortofolio.bind(null, actionIdPortofolio),
-		undefined
+	const router = useRouter();
+	const [image, setImage] = useState<File | string | undefined>(
+		dataPortofolio.imageUrl || undefined
 	);
+	const [errors, setErrors] = useState<Record<string, unknown>>({});
+	const [message, setMessage] = useState("");
+	const [isImageEdit, setIsImageEdit] = useState<boolean>(false);
+
+	if (!dataPortofolio) {
+		return (
+			<div className="h-[250px] flex justify-center items-center">
+				<NotFoundButton isRouteBack={true} />
+			</div>
+		);
+	}
+
+	const form = useForm<editPortofolioType>({
+		resolver: zodResolver(editPortofolioFormSchema),
+		defaultValues: {
+			name: dataPortofolio.name,
+			category: dataPortofolio.category.id,
+			redirectUrl: dataPortofolio.redirectUrl,
+			tech: dataPortofolio.tech.join(", "),
+		},
+	});
+
+	const onSubmit = async () => {
+		let newImageUrl = "";
+		// check image ada apa nggk jika ada dihapus di blob
+		if (dataPortofolio.imageUrl && dataPortofolio.imageUrl !== "") {
+			const deleteOldImage = await deleteImageInBlob(dataPortofolio.imageUrl);
+			if (!deleteOldImage.success) {
+				setErrors(prev => ({
+					...prev,
+					deleteImage: ["error saat menghapus data lama"],
+				}));
+			}
+		}
+		// check kalo image baru di pilih, upload ke blob
+		if (image instanceof File) {
+			const uploadImage = await uploadImageToBlob(image);
+			if (uploadImage.url) {
+				newImageUrl = uploadImage.url;
+			}
+		}
+		// kalo ada image baru atau dihapus image url fieldnya
+		const rawData = {
+			...form.getValues(),
+			imageUrl:
+				image instanceof File || image === undefined
+					? newImageUrl
+					: dataPortofolio.imageUrl,
+		};
+
+		// update portogolio data
+		const responseEdit = await editPortofolio(rawData, dataPortofolio.id);
+		if (!responseEdit.success) {
+			setErrors(prev => ({
+				...prev,
+				...responseEdit.errors,
+			}));
+			return;
+		}
+		setMessage(responseEdit.message);
+		form.reset(form.getValues());
+	};
+
+	const validateImage = (file: File) => {
+		const parsed = uploadImageSchema.safeParse({ image: file });
+		if (!parsed.success) {
+			setErrors(prev => ({
+				...prev,
+				...parsed.error.flatten().fieldErrors,
+			}));
+			return false;
+		}
+		if (errors["image"]) {
+			setErrors(prev => {
+				delete prev["image"];
+				return { ...prev };
+			});
+		}
+		return true;
+	};
+
+	const handleOnChangeInputFile = (files: File[]) => {
+		if (!files) return;
+		if (files.length > 1) {
+			setErrors({
+				image: ["file hanya bisa 1 saja"],
+			});
+			return;
+		}
+		const isValid = validateImage(files[0]);
+		if (isValid) {
+			setImage(files[0]);
+		}
+	};
+
+	const handleOnCloseUploadFile = async () => {
+		setImage(undefined);
+		setIsImageEdit(false);
+	};
+
+	const onAlertClose = () => {
+		setMessage("");
+	};
 
 	return (
 		<>
-			<Dialog>
-				<DialogOverlay />
-				<DialogTrigger asChild>
-					<button
-						className="hidden pointer-events-none"
-						id="trigger-edit-portofolio"
-					/>
-				</DialogTrigger>
-				<DialogContent
-					className={clsx(
-						"sm:max-w-[425px] rounded-x flex flex-col max-h-[95%] sm:max-h-max"
-					)}
-					showCloseButton={false}
-				>
-					<form
-						action={formData => {
-							startTransition(async () => {
-								await formAction(formData);
-							});
-							setActionPortofolio(null);
-						}}
-						className="space-y-4"
-					>
-						<DialogHeader>
-							<DialogTitle>Edit Portofolio</DialogTitle>
-							<DialogDescription
-								className="text-muted-foreground text-sm"
-								aria-describedby="edit-portoflio"
-							>
-								Edit data portofolio
-							</DialogDescription>
-						</DialogHeader>
-						<div className="grid gap-4 pr-2 sm:pr-0 flex-1 overflow-y-auto scroll-w-sm scroll-track-dark ">
-							<div className="grid gap-3">
-								<Label htmlFor="name">Name</Label>
-								<Input
-									type="text"
-									id="name"
-									name="name"
-									placeholder="project wip"
-									defaultValue={
-										(state?.field["name"] as string) ||
-										"" ||
-										actionPortofolio?.name
-									}
-									// required
-								/>
-								{state?.error?.name && (
-									<p className="text-red-500 text-xs">{state.error.name} </p>
-								)}
-							</div>
-							<div className="grid gap-3">
-								<Label htmlFor="category">Category</Label>
-								<SelectCategory
-									defaultValue={
-										(state?.field["category"] as string) ||
-										actionPortofolio?.category.id ||
-										""
-									}
-									categories={allCategories}
-								/>
-							</div>
-							<div className="grid gap-3">
-								<Label htmlFor="tech">Tech stack</Label>
-								<Input
-									type="text"
-									id="tech"
-									name="tech"
-									placeholder="react js"
-									required
-									defaultValue={
-										(state?.field["tech"] as string) ||
-										actionPortofolio?.tech.join(", ") ||
-										""
-									}
-								/>
-								{state?.error?.tech && (
-									<p className="text-red-500">
-										{state.error.tech.map(t => (t += " "))}
+			<div className="space-y-2 mb-4">
+				{message ? (
+					<AlertForm message={message} onClose={onAlertClose} />
+				) : null}
+				{errors ? (
+					<ul>
+						{Object.keys(errors).map(error =>
+							Array.isArray(errors?.[error as keyof typeof errors]) ? (
+								(errors?.[error as keyof typeof errors] as Array<string>).map(
+									e => (
+										<li key={e}>
+											<p className="text-red-400 text-sm">{e}</p>
+										</li>
+									)
+								)
+							) : (
+								<li key={error}>
+									<p className="text-red-400 text-sm">
+										{errors[error as keyof typeof errors] as string}
 									</p>
-								)}
-							</div>
-							<div className="grid gap-4">
-								<div className="grid gap-3">
-									<Label htmlFor="redirectUrl">Project Url</Label>
+								</li>
+							)
+						)}
+					</ul>
+				) : null}
+			</div>
+			<Form {...form}>
+				<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+					<div className="grid md:grid-cols-2 gap-2">
+						<FormField
+							control={form.control}
+							name="name"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Name</FormLabel>
+									<FormControl>
+										<Input placeholder="website keren" {...field} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<SelectCategory categories={allCategories} />
+					</div>
+					<FormField
+						control={form.control}
+						name="tech"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Tech stack</FormLabel>
+								<FormControl>
+									<Input placeholder="Mern stack, neon db" {...field} />
+								</FormControl>
+							</FormItem>
+						)}
+					/>
 
-									<Input
-										type="text"
-										id="redirectUrl"
-										name="redirect"
-										placeholder="https://github....."
-										defaultValue={
-											(state?.field["redirect"] as string) ||
-											actionPortofolio?.redirectUrl ||
-											""
-										}
-										required
-									/>
+					<FormField
+						control={form.control}
+						name="redirectUrl"
+						render={({ field }) => (
+							<FormItem>
+								<FormLabel>Redirect Url</FormLabel>
+								<FormControl>
+									<Input type="url" placeholder="https://" {...field} />
+								</FormControl>
+							</FormItem>
+						)}
+					/>
+					{dataPortofolio.imageUrl && typeof image === "string" ? (
+						<UploadImage
+							isPreviewOpen={isImageEdit || dataPortofolio.imageUrl !== null}
+							image={dataPortofolio.imageUrl}
+							isError={errors["image"] !== undefined}
+							onClose={handleOnCloseUploadFile}
+							Icon={<Trash2 />}
+						/>
+					) : (
+						<UploadImage
+							isPreviewOpen={isImageEdit}
+							image={image}
+							isError={errors["image"] !== undefined}
+							onChange={handleOnChangeInputFile}
+							onClose={handleOnCloseUploadFile}
+						/>
+					)}
 
-									{state?.error?.redirectUrl && (
-										<p className="text-red-500">{state.error.redirectUrl} </p>
-									)}
-								</div>
-							</div>
-							<div className="grid gap-3">
-								<Label htmlFor="image">Image Url</Label>
-								<div className="flex gap-2">
-									<Input
-										type="text"
-										name="imageName"
-										placeholder="https://github....."
-										defaultValue={
-											(state?.field["imageName"] as string) ||
-											actionPortofolio?.imageUrl ||
-											""
-										}
-										hidden
-									/>
-									{!isImageEdit && (
-										<div className="w-full flex gap-2">
-											<div
-												className="flex-1"
-												onClick={() => setIsImageEdit(true)}
-											>
-												<Input
-													type="text"
-													defaultValue={
-														(state?.field["image"] as string) ||
-														actionPortofolio?.imageUrl ||
-														"tidak ada foto"
-													}
-													disabled
-												/>
-											</div>
+					<div className="flex gap-2">
+						<Button
+							variant="outline"
+							disabled={form.formState.isSubmitting}
+							className="ms-auto rounded-xl"
+							type="button"
+							onClick={() => {
+								router.back();
+							}}
+						>
+							Cancel
+						</Button>
 
-											<Button
-												type="button"
-												variant="outline"
-												className="rounded-xl"
-												onClick={() =>
-													document.getElementById("trigger-view-image")?.click()
-												}
-											>
-												view
-											</Button>
-										</div>
-									)}
+						<Button
+							disabled={form.formState.isSubmitting}
+							type="submit"
+							className="rounded-xl"
+						>
+							{form.formState.isSubmitting ? (
+								<>
+									<span>
+										<LoadingSpinner className="dark:text-white" />
+									</span>
+									Submitting...
+								</>
+							) : (
+								"Submit"
+							)}
+						</Button>
+					</div>
+				</form>
+			</Form>
 
-									{isImageEdit && (
-										<>
-											<Input
-												type="file"
-												id="image"
-												name="image"
-												accept="image/*"
-											/>
-											<Button
-												type="button"
-												variant="outline"
-												className="rounded-xl"
-												onClick={() => setIsImageEdit(false)}
-											>
-												cancel
-											</Button>
-										</>
-									)}
-								</div>
-								{state?.error?.image && (
-									<p className="text-red-500 text-xs">{state.error.image} </p>
-								)}
-							</div>
-						</div>
-						<DialogFooter className="mt-5">
-							<DialogClose
-								asChild
-								onClick={() => {
-									setIsImageEdit(false);
-									startTransition(() => reset());
-								}}
-							>
-								<Button
-									variant="outline"
-									className="rounded-xl"
-									id="btn-close-edit"
-								>
-									Cancel
-								</Button>
-							</DialogClose>
-							<Button type="submit" className="rounded-xl" disabled={isPending}>
-								{isPending ? "Loading..." : "Submit"}
-							</Button>
-						</DialogFooter>
-					</form>
-				</DialogContent>
-			</Dialog>
-
-			<PreviewImage url={actionPortofolio?.imageUrl} />
+			{/* <PreviewImage url={actionPortofolio?.imageUrl} /> */}
 		</>
 	);
 };
@@ -244,39 +281,39 @@ type PreviewImageProps = {
 	url?: string | null;
 };
 
-const PreviewImage = ({ url }: PreviewImageProps) => {
-	const { actionPortofolio } = useActionPortofolio();
-	return (
-		<Dialog>
-			<DialogOverlay className="bg-black/50 z-[60]" />
-			<DialogTrigger asChild>
-				<button
-					className="hidden pointer-events-none"
-					id="trigger-view-image"
-				/>
-			</DialogTrigger>
-			<DialogContent className="z-[60]">
-				<DialogHeader>
-					<DialogTitle className="capitalize">
-						{actionPortofolio?.name} Image
-					</DialogTitle>
-					<DialogDescription
-						className="text-muted-foreground text-sm"
-						aria-describedby="preview photo"
-					>
-						preview
-					</DialogDescription>
-				</DialogHeader>
-				<div className="mt-4">
-					<Image
-						width={200}
-						height={100}
-						src={url ?? "https://placehold.co/400x200"}
-						alt="image url"
-						className="mx-auto w-auto h-auto"
-					/>
-				</div>
-			</DialogContent>
-		</Dialog>
-	);
-};
+// const PreviewImage = ({ url }: PreviewImageProps) => {
+// 	const { actionPortofolio } = useActionPortofolio();
+// 	return (
+// 		<Dialog>
+// 			<DialogOverlay className="bg-black/50 z-[60]" />
+// 			<DialogTrigger asChild>
+// 				<button
+// 					className="hidden pointer-events-none"
+// 					id="trigger-view-image"
+// 				/>
+// 			</DialogTrigger>
+// 			<DialogContent className="z-[60]">
+// 				<DialogHeader>
+// 					<DialogTitle className="capitalize">
+// 						{actionPortofolio?.name} Image
+// 					</DialogTitle>
+// 					<DialogDescription
+// 						className="text-muted-foreground text-sm"
+// 						aria-describedby="preview photo"
+// 					>
+// 						preview
+// 					</DialogDescription>
+// 				</DialogHeader>
+// 				<div className="mt-4">
+// 					<Image
+// 						width={200}
+// 						height={100}
+// 						src={url ?? "https://placehold.co/400x200"}
+// 						alt="image url"
+// 						className="mx-auto w-auto h-auto"
+// 					/>
+// 				</div>
+// 			</DialogContent>
+// 		</Dialog>
+// 	);
+// };

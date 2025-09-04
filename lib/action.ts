@@ -5,15 +5,17 @@ import {
 	createPortofolioFormSchema,
 	createPortofolioFormType,
 	editPortofolioFormSchema,
-	editPortofolioWithFileFormSchema,
+	editPortofolioType,
+	// editPortofolioWithFileFormSchema,
 	loginFormSchema,
+	uploadImageSchema,
 } from "./schema";
 import { prisma } from "./prisma";
 import bcrypt from "bcrypt";
 import { AuthError } from "next-auth";
 import { put, del } from "@vercel/blob";
 import { revalidatePath } from "next/cache";
-import { getPortofolioById, isUserLogin } from "./api";
+import { getPortofolioById } from "./api";
 
 export const authenticate = async (prevState: unknown, formData: FormData) => {
 	const parsedFormData = loginFormSchema.safeParse(
@@ -57,6 +59,60 @@ export const authenticate = async (prevState: unknown, formData: FormData) => {
 	}
 };
 
+export const uploadImageToBlob = async (file: File) => {
+	const parsed = uploadImageSchema.safeParse({ image: file });
+
+	if (!parsed.success) {
+		return {
+			message: "Upload image failed",
+			errors: parsed.error.flatten().fieldErrors,
+			success: false,
+		};
+	}
+	if (!parsed.data.image)
+		return {
+			message: "file is undefined",
+			success: false,
+		};
+	try {
+		const { url } = await put(
+			`${parsed.data.image?.name}-${new Date().toISOString().split("T")[0]}`,
+			parsed.data.image,
+			{
+				access: "public",
+				allowOverwrite: true,
+			}
+		);
+		return {
+			message: "upload image success",
+			success: true,
+			url,
+		};
+	} catch (error) {
+		console.log("error di upload image to blob func " + error);
+		return {
+			errors: error,
+			message: "upload failed",
+			success: false,
+		};
+	}
+};
+
+export const deleteImageInBlob = async (url: string) => {
+	try {
+		await del(url);
+		return {
+			success: true,
+		};
+	} catch (error) {
+		console.log("error di delete image : " + error);
+		return {
+			success: false,
+			errors: error,
+		};
+	}
+};
+
 export const createUser = async (email: string, password: string) => {
 	const salt = await bcrypt.genSalt(10);
 	const hashPassword = await bcrypt.hash(password, salt);
@@ -90,153 +146,244 @@ export const seedCreateCaregory = async () => {
 	}
 };
 
-export const createPortofolio = async (
-	prevState: unknown,
-	formData: unknown
-) => {
-	if (!(formData instanceof FormData)) return;
-
-	const createFormdata: createPortofolioFormType = {
-		name: formData.get("name") as string,
-		category: formData.get("category") as string,
-		image: formData.get("image") as File,
-		redirectUrl: formData.get("redirect") as string,
-		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
-	};
-	if (createFormdata.image?.size === 0) {
-		delete createFormdata["image"];
-	}
-	const parsedFormData = createPortofolioFormSchema.safeParse(createFormdata);
-	if (!parsedFormData.success) {
-		return {
-			field: Object.fromEntries(formData.entries()),
-			error: parsedFormData.error.flatten().fieldErrors,
-		};
-	}
-	if (parsedFormData.data.image) {
-		const { url } = await put(
-			`${parsedFormData.data.image.name}-${
-				new Date().toISOString().split("T")[0]
-			}`,
-			parsedFormData.data.image,
-			{
-				access: "public",
-				allowOverwrite: true,
-			}
-		);
-		await prisma.project.create({
-			data: {
-				name: createFormdata.name,
-				redirectUrl: createFormdata.redirectUrl,
-				categoryId: createFormdata.category,
-				imageUrl: url,
-				tech: createFormdata.tech,
-			},
-		});
-	} else {
-		await prisma.project.create({
-			data: {
-				name: createFormdata.name,
-				redirectUrl: createFormdata.redirectUrl,
-				categoryId: createFormdata.category,
-				tech: createFormdata.tech,
-			},
-		});
-	}
-
-	revalidatePath("/dashboard/portofolio");
+export type ReturnType = {
+	message: string;
+	errors?: Record<string, unknown>;
+	success: boolean;
 };
 
-export const editPortofolio = async (
-	idProject: string | undefined | null,
-	prevState: unknown,
-	formData: FormData
-) => {
-	if (!(formData instanceof FormData)) return;
+export const createPortofolio = async (
+	rawData: createPortofolioFormType
+): Promise<ReturnType> => {
+	const parsed = createPortofolioFormSchema.safeParse(rawData);
 
-	if (!idProject) return;
-	const image = formData.get("image");
-	const imageName = formData.get("imageName") as string;
-
-	const isImageFile = image instanceof File;
-
-	const editFormData = {
-		name: formData.get("name") as string,
-		category: formData.get("category") as string,
-		redirectUrl: formData.get("redirect") as string,
-		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
-		image: isImageFile ? (image as File) : (image as string) || undefined,
-	};
-	const schema = isImageFile
-		? editPortofolioWithFileFormSchema
-		: editPortofolioFormSchema;
-
-	if (isImageFile && (image as File).size === 0) delete editFormData["image"];
-
-	const parsedFormData = schema.safeParse(editFormData);
-
-	if (!parsedFormData.success) {
+	if (!parsed.success) {
 		return {
-			field: Object.fromEntries(formData.entries()),
-			error: parsedFormData.error.flatten().fieldErrors,
+			message: "Submission failed",
+			errors: parsed.error.flatten().fieldErrors,
+			success: false,
+		};
+	}
+	try {
+		await prisma.project.create({
+			data: {
+				name: parsed.data.name,
+				redirectUrl: parsed.data.redirectUrl,
+				categoryId: parsed.data.category,
+				imageUrl: parsed.data.imageUrl,
+				tech: parsed.data.tech.split(",").map(t => t.trim()),
+			},
+		});
+
+		revalidatePath("/dashboard/portofolio");
+		revalidatePath("/");
+
+		return {
+			success: true,
+			message: "Submission Success",
+		};
+	} catch (error) {
+		console.log(`error di create form portofolio func : ${error}`);
+		if (parsed.data.imageUrl) {
+			await del(parsed.data.imageUrl);
+		}
+		return {
+			message: "Submission failed",
+			success: false,
+		};
+	}
+};
+export const editPortofolio = async (
+	rawData: editPortofolioType,
+	idProject: string
+): Promise<ReturnType> => {
+	const parsed = editPortofolioFormSchema.safeParse(rawData);
+
+	if (!parsed.success) {
+		return {
+			message: "Submission failed",
+			errors: parsed.error.flatten().fieldErrors,
+			success: false,
 		};
 	}
 
-	if (!isImageFile) {
+	try {
 		await prisma.project.update({
 			data: {
-				name: parsedFormData.data.name,
-				categoryId: parsedFormData.data.category,
-				tech: parsedFormData.data.tech,
-				redirectUrl: parsedFormData.data.redirectUrl,
+				name: parsed.data.name,
+				redirectUrl: parsed.data.redirectUrl,
+				categoryId: parsed.data.category,
+				imageUrl: parsed.data.imageUrl,
+				tech: parsed.data.tech.split(",").map(t => t.trim()),
 			},
 			where: {
 				id: idProject,
 			},
 		});
-	} else {
-		if (imageName) await del(imageName);
-		const newImage = parsedFormData.data.image as File;
-		if (newImage) {
-			const { url } = await put(
-				`${newImage.name.split(".")[0]}-${
-					new Date().toISOString().split("T")[0]
-				}`,
-				newImage,
-				{
-					access: "public",
-					allowOverwrite: true,
-				}
-			);
-			await prisma.project.update({
-				data: {
-					name: parsedFormData.data.name,
-					categoryId: parsedFormData.data.category,
-					tech: parsedFormData.data.tech,
-					redirectUrl: parsedFormData.data.redirectUrl,
-					imageUrl: url,
-				},
-				where: {
-					id: idProject,
-				},
-			});
-		} else {
-			await prisma.project.update({
-				data: {
-					name: parsedFormData.data.name,
-					categoryId: parsedFormData.data.category,
-					tech: parsedFormData.data.tech,
-					redirectUrl: parsedFormData.data.redirectUrl,
-					imageUrl: null,
-				},
-				where: {
-					id: idProject,
-				},
-			});
-		}
+
+		// revalidatePath("/dashboard/portofolio/edit/[id]");
+		revalidatePath("/dashboard/portofolio");
+		revalidatePath("/");
+
+		return {
+			success: true,
+			message: "Submission Success",
+		};
+	} catch (error) {
+		console.log(`error di create form portofolio func : ${error}`);
+		return {
+			message: "Submission failed",
+			success: false,
+		};
 	}
-	revalidatePath("/dashboard/portofolio");
 };
+// export const createPortofolio = async (
+// 	prevState: unknown,
+// 	formData: unknown
+// ) => {
+// 	if (!(formData instanceof FormData)) return;
+
+// 	const createFormdata: createPortofolioFormType = {
+// 		name: formData.get("name") as string,
+// 		category: formData.get("category") as string,
+// 		image: formData.get("image") as File,
+// 		redirectUrl: formData.get("redirect") as string,
+// 		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
+// 	};
+// 	if (createFormdata.image?.size === 0) {
+// 		delete createFormdata["image"];
+// 	}
+// 	const parsedFormData = createPortofolioFormSchema.safeParse(createFormdata);
+// 	if (!parsedFormData.success) {
+// 		return {
+// 			field: Object.fromEntries(formData.entries()),
+// 			error: parsedFormData.error.flatten().fieldErrors,
+// 		};
+// 	}
+// 	if (parsedFormData.data.image) {
+// 		const { url } = await put(
+// 			`${parsedFormData.data.image.name}-${
+// 				new Date().toISOString().split("T")[0]
+// 			}`,
+// 			parsedFormData.data.image,
+// 			{
+// 				access: "public",
+// 				allowOverwrite: true,
+// 			}
+// 		);
+// 		await prisma.project.create({
+// 			data: {
+// 				name: createFormdata.name,
+// 				redirectUrl: createFormdata.redirectUrl,
+// 				categoryId: createFormdata.category,
+// 				imageUrl: url,
+// 				tech: createFormdata.tech,
+// 			},
+// 		});
+// 	} else {
+// 		await prisma.project.create({
+// 			data: {
+// 				name: createFormdata.name,
+// 				redirectUrl: createFormdata.redirectUrl,
+// 				categoryId: createFormdata.category,
+// 				tech: createFormdata.tech,
+// 			},
+// 		});
+// 	}
+
+// 	revalidatePath("/dashboard/portofolio");
+// };
+
+// export const editPortofolio = async (
+// 	idProject: string | undefined | null,
+// 	prevState: unknown,
+// 	formData: FormData
+// ) => {
+// 	if (!(formData instanceof FormData)) return;
+
+// 	if (!idProject) return;
+// 	const image = formData.get("image");
+// 	const imageName = formData.get("imageName") as string;
+
+// 	const isImageFile = image instanceof File;
+
+// 	const editFormData = {
+// 		name: formData.get("name") as string,
+// 		category: formData.get("category") as string,
+// 		redirectUrl: formData.get("redirect") as string,
+// 		tech: (formData.get("tech") as string).split(",").map(t => t.trim()),
+// 		image: isImageFile ? (image as File) : (image as string) || undefined,
+// 	};
+// 	const schema = isImageFile
+// 		? editPortofolioWithFileFormSchema
+// 		: editPortofolioFormSchema;
+
+// 	if (isImageFile && (image as File).size === 0) delete editFormData["image"];
+
+// 	const parsedFormData = schema.safeParse(editFormData);
+
+// 	if (!parsedFormData.success) {
+// 		return {
+// 			field: Object.fromEntries(formData.entries()),
+// 			error: parsedFormData.error.flatten().fieldErrors,
+// 		};
+// 	}
+
+// 	if (!isImageFile) {
+// 		await prisma.project.update({
+// 			data: {
+// 				name: parsedFormData.data.name,
+// 				categoryId: parsedFormData.data.category,
+// 				tech: parsedFormData.data.tech,
+// 				redirectUrl: parsedFormData.data.redirectUrl,
+// 			},
+// 			where: {
+// 				id: idProject,
+// 			},
+// 		});
+// 	} else {
+// 		if (imageName) await del(imageName);
+// 		const newImage = parsedFormData.data.image as File;
+// 		if (newImage) {
+// 			const { url } = await put(
+// 				`${newImage.name.split(".")[0]}-${
+// 					new Date().toISOString().split("T")[0]
+// 				}`,
+// 				newImage,
+// 				{
+// 					access: "public",
+// 					allowOverwrite: true,
+// 				}
+// 			);
+// 			await prisma.project.update({
+// 				data: {
+// 					name: parsedFormData.data.name,
+// 					categoryId: parsedFormData.data.category,
+// 					tech: parsedFormData.data.tech,
+// 					redirectUrl: parsedFormData.data.redirectUrl,
+// 					imageUrl: url,
+// 				},
+// 				where: {
+// 					id: idProject,
+// 				},
+// 			});
+// 		} else {
+// 			await prisma.project.update({
+// 				data: {
+// 					name: parsedFormData.data.name,
+// 					categoryId: parsedFormData.data.category,
+// 					tech: parsedFormData.data.tech,
+// 					redirectUrl: parsedFormData.data.redirectUrl,
+// 					imageUrl: null,
+// 				},
+// 				where: {
+// 					id: idProject,
+// 				},
+// 			});
+// 		}
+// 	}
+// 	revalidatePath("/dashboard/portofolio");
+// };
 
 export const deletePortofolioById = async (formData: unknown) => {
 	if (!(formData instanceof FormData)) return;
@@ -247,7 +394,12 @@ export const deletePortofolioById = async (formData: unknown) => {
 	const portofolio = await getPortofolioById(id, { imageUrl: true });
 	try {
 		if (!id || !portofolio) return;
-		if (portofolio.imageUrl) await del(portofolio.imageUrl);
+		if (portofolio.imageUrl) {
+			const response = await deleteImageInBlob(portofolio.imageUrl);
+			if (!response.success) {
+				throw new Error(response?.errors as any);
+			}
+		}
 		await prisma.project.delete({
 			where: {
 				id,

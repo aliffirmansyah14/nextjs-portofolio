@@ -12,110 +12,225 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { use, useActionState } from "react";
-import { createPortofolio } from "@/lib/action";
+import { use, useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+	createPortofolioFormSchema,
+	createPortofolioFormType,
+	uploadImageSchema,
+} from "@/lib/schema";
+import {
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+} from "@/components/ui/form";
 import SelectCategory from "./select-category";
+import { createPortofolio, uploadImageToBlob } from "@/lib/action";
+import UploadImage from "./upload-image";
+import LoadingSpinner from "./loading-spinner";
+import AlertForm from "./alert-form";
 
 type FormAddPortofolioProps = {
 	categories: Promise<{ id: string; name: string }[]>;
 };
 
+export const defaultValuePortofolio = {
+	category: "",
+	name: "",
+	redirectUrl: "",
+	tech: "",
+};
+
 const FormAddPortofolio = ({ categories }: FormAddPortofolioProps) => {
 	const allCategories = use(categories);
-	const [state, formAction, isPending] = useActionState(
-		createPortofolio,
-		undefined
-	);
+	const [errors, setErrors] = useState<Record<string, unknown>>({});
+	const [message, setMessage] = useState("");
+	const [image, setImage] = useState<File>();
 
+	const form = useForm<createPortofolioFormType>({
+		resolver: zodResolver(createPortofolioFormSchema),
+		defaultValues: defaultValuePortofolio,
+	});
+
+	const onSubmit = async () => {
+		if (errors["image"]) return;
+		setErrors({});
+		setMessage("");
+		let rawData = form.getValues();
+		if (image) {
+			const responseUpload = await uploadImageToBlob(image);
+			if (responseUpload.success) {
+				rawData = { ...rawData, imageUrl: responseUpload.url };
+			}
+		}
+		const result = await createPortofolio(rawData);
+
+		if (result.errors) {
+			setErrors(result.errors);
+		}
+		setMessage(result.message);
+		form.reset(defaultValuePortofolio);
+		setImage(undefined);
+	};
+	const validateImage = (file: File) => {
+		const parsed = uploadImageSchema.safeParse({ image: file });
+		if (!parsed.success) {
+			setErrors(prev => ({
+				...prev,
+				...parsed.error.flatten().fieldErrors,
+			}));
+			return false;
+		}
+		if (errors["image"]) {
+			setErrors(prev => {
+				delete prev["image"];
+				return { ...prev };
+			});
+		}
+		return true;
+	};
+	const handleOnChangeInputFile = (files: File[]) => {
+		if (!files) return;
+		if (files.length > 1) {
+			setErrors({
+				image: ["file hanya bisa 1 saja"],
+			});
+			return;
+		}
+		const isValid = validateImage(files[0]);
+		if (isValid) {
+			setImage(files[0]);
+		}
+	};
+
+	const handleOnCloseUploadFile = () => {
+		setImage(undefined);
+	};
+
+	const onAlertClose = () => {
+		setMessage("");
+	};
 	return (
 		<Dialog>
 			<DialogOverlay />
 			<DialogTrigger asChild>
 				<button className="hidden" id="trigger-button-add-portofolio" />
 			</DialogTrigger>
-
 			<DialogContent className="sm:max-w-[425px] rounded-xl">
-				<form action={formAction} className="space-y-4">
-					<DialogHeader>
-						<DialogTitle>Add Portofolio</DialogTitle>
-						<DialogDescription className="text-muted-foreground text-sm">
-							Create data portofolio
-						</DialogDescription>
-					</DialogHeader>
-					<div className="grid gap-4">
-						<div className="grid gap-3">
-							<Label htmlFor="name">Name</Label>
-							<Input
-								type="text"
-								id="name"
+				<DialogHeader>
+					<DialogTitle>Add Portofolio</DialogTitle>
+					<DialogDescription className="text-muted-foreground text-sm">
+						Create data portofolio
+					</DialogDescription>
+
+					{message ? (
+						<AlertForm message={message} onClose={onAlertClose} />
+					) : null}
+					{errors ? (
+						<ul>
+							{Object.keys(errors).map(error =>
+								Array.isArray(errors?.[error as keyof typeof errors]) ? (
+									(errors?.[error as keyof typeof errors] as Array<string>).map(
+										e => (
+											<li key={e}>
+												<p className="text-red-400 text-sm">{e}</p>
+											</li>
+										)
+									)
+								) : (
+									<li key={error}>
+										<p className="text-red-400 text-sm">
+											{errors[error as keyof typeof errors] as string}
+										</p>
+									</li>
+								)
+							)}
+						</ul>
+					) : null}
+				</DialogHeader>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+						<div className="grid md:grid-cols-2 gap-2">
+							<FormField
+								control={form.control}
 								name="name"
-								placeholder="project wip"
-								defaultValue={(state?.field["name"] as string) ?? ""}
-								required
-							/>
-							{state?.error?.name && (
-								<p className="text-red-500">{state.error.name} </p>
-							)}
-						</div>
-						<div className="grid gap-3">
-							<Label htmlFor="category">Category</Label>
-							<SelectCategory
-								defaultValue={state?.field["category"] as string}
-								categories={allCategories}
-							/>
-						</div>
-						<div className="grid gap-3">
-							<Label htmlFor="tech">Tech stack</Label>
-							<Input
-								type="text"
-								id="tech"
-								name="tech"
-								placeholder="react js"
-								required
-								defaultValue={state?.field["tech"] as string}
-							/>
-							{state?.error?.tech && (
-								<p className="text-red-500">
-									{state.error.tech.map(t => (t += " "))}
-								</p>
-							)}
-						</div>
-						<div className="grid gap-4">
-							<div className="grid gap-3">
-								<Label htmlFor="redirectUrl">Project Url</Label>
-								<Input
-									type="text"
-									id="redirectUrl"
-									name="redirect"
-									placeholder="https://github....."
-									defaultValue={(state?.field["redirect"] as string) ?? ""}
-									required
-								/>
-								{state?.error?.redirectUrl && (
-									<p className="text-red-500">{state.error.redirectUrl} </p>
+								render={({ field }) => (
+									<FormItem>
+										<FormLabel>Name</FormLabel>
+										<FormControl>
+											<Input placeholder="website keren" {...field} />
+										</FormControl>
+									</FormItem>
 								)}
-							</div>
+							/>
+							<SelectCategory categories={allCategories} />
 						</div>
-						<div className="grid gap-3">
-							<Label htmlFor="image">Tech stack</Label>
-							<Input type="file" id="image" name="image" accept="image/*" />
-							{state?.error?.image && (
-								<p className="text-red-500 text-xs">{state.error.image} </p>
+						<FormField
+							control={form.control}
+							name="tech"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Tech stack</FormLabel>
+									<FormControl>
+										<Input placeholder="Mern stack, neon db" {...field} />
+									</FormControl>
+								</FormItem>
 							)}
-						</div>
-					</div>
-					<DialogFooter>
-						<DialogClose asChild>
-							<Button variant="outline" className="rounded-xl">
-								Cancel
+						/>
+
+						<FormField
+							control={form.control}
+							name="redirectUrl"
+							render={({ field }) => (
+								<FormItem>
+									<FormLabel>Redirect Url</FormLabel>
+									<FormControl>
+										<Input type="url" placeholder="https://" {...field} />
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+
+						<UploadImage
+							isPreviewOpen={image !== undefined}
+							image={image}
+							isError={errors["image"] !== undefined}
+							onChange={handleOnChangeInputFile}
+							onClose={handleOnCloseUploadFile}
+						/>
+
+						<DialogFooter>
+							<DialogClose asChild>
+								<Button
+									variant="outline"
+									disabled={form.formState.isSubmitting}
+									className="rounded-xl"
+								>
+									Cancel
+								</Button>
+							</DialogClose>
+							<Button
+								disabled={form.formState.isSubmitting}
+								type="submit"
+								className="rounded-xl"
+							>
+								{form.formState.isSubmitting ? (
+									<>
+										<span>
+											<LoadingSpinner className="dark:text-white" />
+										</span>
+										Submitting...
+									</>
+								) : (
+									"Submit"
+								)}
 							</Button>
-						</DialogClose>
-						<Button disabled={isPending} type="submit" className="rounded-xl">
-							{isPending ? "Loading..." : "Submit"}
-						</Button>
-					</DialogFooter>
-				</form>
+						</DialogFooter>
+					</form>
+				</Form>
 			</DialogContent>
 		</Dialog>
 	);

@@ -153,9 +153,9 @@ const UrlRender = ({ url }: { url?: string | null }) => {
 			</p>
 			{url && (
 				<div
-					className={`hidden group-active::block group-hover/redirect:block absolute -top-10 text-xs bg-secondary px-3 py-2 rounded-2xl`}
+					className={`hidden group-active:block group-hover/redirect:block absolute -top-5 text-xs bg-secondary px-3 py-2 rounded-2xl z-20 truncate w-72`}
 					style={{
-						left: `-${url.length + 20}px`,
+						left: `-${url.length + 10}px`,
 					}}
 				>
 					<a
