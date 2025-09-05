@@ -9,14 +9,16 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 const Modal = ({
 	children,
 	title,
+	onClose,
 	description,
 }: {
+	onClose?: () => void;
 	title: string;
 	description?: string;
 	children: React.ReactNode;
 }) => {
 	return (
-		<Dialog defaultOpen>
+		<Dialog open>
 			<DialogOverlay />
 			<DialogContent
 				className="sm:max-w-[425px] rounded-x flex flex-col max-h-[95%] sm:max-h-max"
