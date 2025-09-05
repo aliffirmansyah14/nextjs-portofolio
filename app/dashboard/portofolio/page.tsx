@@ -21,6 +21,7 @@ import TakeSelect from "@/components/shared/dashboard/portofolio/take-select";
 import SiderbarTriggerMobile from "@/components/shared/dashboard/sidebar/sidebar-trigger-mobile";
 import Breadcrumbs from "@/components/shared/dashboard/Breadcrumbs";
 import FormPortofolio from "@/components/shared/dashboard/portofolio/form-portofolio";
+import LoadingSpinner from "@/components/shared/dashboard/portofolio/loading-spinner";
 
 const PortofolioPage = async ({
 	searchParams,
@@ -40,7 +41,6 @@ const PortofolioPage = async ({
 					list={[
 						{ href: "/dashboard", label: "dashboard" },
 						{ href: "/dashboard/portofolio", label: "portofolio" },
-						// { href: "/dashboard/portofolio/edit", label: "edit" },
 					]}
 				/>
 			</header>
@@ -49,8 +49,9 @@ const PortofolioPage = async ({
 					<CardTitle>
 						<h2 className=" text-3xl font-semibold">Portofolios</h2>
 					</CardTitle>
-					<CardAction>
+					<CardAction className="relative overflow-hidden">
 						<ButtonAddPortofolio />
+						<FormPortofolio />
 					</CardAction>
 				</CardHeader>
 				<CardContent className="overflow-auto border-t py-2 lg:scroll-w-sm lg:scroll-h-sm lg:scroll-track-dark">
@@ -74,7 +75,6 @@ const PortofolioPage = async ({
 					</div>
 				</CardFooter>
 			</Card>
-			<FormPortofolio />
 		</>
 	);
 };
