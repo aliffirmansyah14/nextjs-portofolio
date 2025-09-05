@@ -77,6 +77,7 @@ const FormEditPortofolio = ({
 					...prev,
 					deleteImage: ["error saat menghapus data lama"],
 				}));
+				return;
 			}
 		}
 		// check kalo image baru di pilih, upload ke blob
