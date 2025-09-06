@@ -1,7 +1,8 @@
 import Section from "@/components/shared/layout/section-layout";
 import { ArrowRight, GithubIcon, InstagramIcon, MailIcon } from "lucide-react";
-import { Logo } from "../navbar";
+
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Logo } from "../logo";
 
 const informations = [
 	{
