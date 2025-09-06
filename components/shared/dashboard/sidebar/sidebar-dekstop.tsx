@@ -1,15 +1,8 @@
-"use client";
-import { usePathname } from "next/navigation";
-import { useSideBarZ } from "@/store/sidebar";
-import clsx from "clsx";
-import { Logo } from "../../navbar";
-import ProgressLink from "../../progress-link";
-import { sidebarLinks } from "@/lib/constants";
+import { Logo } from "../../logo";
+import Navlinks from "./navlinks";
 import UsernameButton from "./username-button";
 
 const SidebarDekstop = () => {
-	const pathname = usePathname();
-
 	return (
 		<aside
 			className={
@@ -24,24 +17,10 @@ const SidebarDekstop = () => {
 				</header>
 				<nav className="mt-4 flex-1 flex flex-col">
 					<div className="p-2 text-[13px] text-foreground/70 h-8">Menu</div>
-					<ul className="px-2 flex-1 flex flex-col">
-						{sidebarLinks.map((link, index) => {
-							const isLinkActive = pathname === link.href;
-							return (
-								<ProgressLink
-									href={link.href}
-									key={index}
-									className={`w-full p-2 flex items-center h-8 hover:bg-primary/30 rounded gap-2 [&>svg]:size-4 [&>svg]:shrink-0 ${
-										isLinkActive ? "bg-primary/40" : "bg-none"
-									}`}
-								>
-									{<link.icon />}
-									{link.label}
-								</ProgressLink>
-							);
-						})}
+					<Navlinks />
+					<div className="px-2">
 						<UsernameButton />
-					</ul>
+					</div>
 				</nav>
 			</div>
 		</aside>
