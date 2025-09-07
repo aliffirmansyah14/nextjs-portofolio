@@ -13,7 +13,7 @@ import { createQueryString } from "@/lib/utils";
 import { Search } from "lucide-react";
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 const SearchInput = () => {
 	const router = useRouter();

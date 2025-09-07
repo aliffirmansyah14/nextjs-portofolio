@@ -9,7 +9,6 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { getCountPortofolios } from "@/lib/api";
-
 import { Suspense } from "react";
 import PaginationTable from "@/components/shared/dashboard/portofolio/pagination";
 import TablePortofolio from "@/components/shared/dashboard/portofolio/table-portofolio";
@@ -21,7 +20,6 @@ import TakeSelect from "@/components/shared/dashboard/portofolio/take-select";
 import SiderbarTriggerMobile from "@/components/shared/dashboard/sidebar/sidebar-trigger-mobile";
 import Breadcrumbs from "@/components/shared/dashboard/Breadcrumbs";
 import FormPortofolio from "@/components/shared/dashboard/portofolio/form-portofolio";
-import LoadingSpinner from "@/components/shared/dashboard/portofolio/loading-spinner";
 
 const PortofolioPage = async ({
 	searchParams,
@@ -31,7 +29,7 @@ const PortofolioPage = async ({
 	const { page = "1", take = "4", search = "" } = await searchParams;
 	const takeParam = getMinMax(Number(take), MIN_TAKE, MAX_TAKE);
 
-	const totalDataPortofolios = await getCountPortofolios(search);
+	const totalDataPortofolios = getCountPortofolios(search);
 
 	return (
 		<>
@@ -68,10 +66,19 @@ const PortofolioPage = async ({
 						<TakeSelect />
 					</div>
 					<div className=" md:ms-0 order-1 md:order-2">
-						<PaginationTable limitData={totalDataPortofolios || 0} />
+						<Suspense
+							fallback={
+								<div className="w-20 h-8 rounded-xl bg-accent animate-pulse justify-center items-center"></div>
+							}
+						>
+							<PaginationTable
+								key={`${page}_${take}_${search}`}
+								limitData={totalDataPortofolios || 0}
+							/>
+						</Suspense>
 					</div>
 					<div className="order-3">
-						<SearchInput key={search} />
+						<SearchInput />
 					</div>
 				</CardFooter>
 			</Card>

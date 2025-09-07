@@ -14,8 +14,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 			<div className="min-h-[100dvh] bg-background grid grid-cols-1 md:grid-cols-[var(--sidebar-width-md)_minmax(0,1fr)] lg:grid-cols-[var(--sidebar-width_minmax(0,1fr)]">
 				{/* <SidebarProvider> */}
 				<SidebarDekstop />
-				<main className="py-4">{children}</main>
 				<SidebarMobile />
+				<main className="py-4">{children}</main>
 				{/* </SidebarProvider> */}
 			</div>
 			<OverlaySidebar />
