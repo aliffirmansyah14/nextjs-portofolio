@@ -76,7 +76,7 @@ const NavbarLink = ({ href, label, active }: NavbarLinkProps) => {
 				"relative before:content-[''] before:opacity-0 before:w-2 before:h-0.5 before:absolute before:-bottom-1 before:bg-neutral-100 before:rounded-lg before:-translate-1/2 before:left-1/2 transition-opacity",
 				{
 					"before:opacity-100": active,
-				}
+				},
 			)}
 		>
 			<Link
@@ -108,7 +108,7 @@ const MenuButton = ({
 			aria-label="nav-button"
 			className={cn(
 				"md:hidden p-2 flex items-center  rounded-xl cursor-pointer group",
-				type === "dekstop" ? "hover:bg-accent active:bg-accent" : ""
+				type === "dekstop" ? "hover:bg-accent active:bg-accent" : "",
 			)}
 			onClick={onClick}
 		>
@@ -132,7 +132,7 @@ const NavigasiMenuMobile = ({
 		<nav
 			className={cn(
 				"fixed md:hidden inset-0 -z-10 flex flex-col bg-sidebar-accent gap-4 opacity-0 transition-opacity",
-				className
+				className,
 			)}
 		>
 			<div className="container mx-auto h-16 flex items-center justify-between px-6 md:px-16 lg:px-20">

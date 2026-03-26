@@ -3,10 +3,11 @@ import { use, useState } from "react";
 import Tabs from "./tabs";
 import Project from "./project";
 import Pagination from "../pagination";
-import { Prisma } from "@prisma/client";
+
 import { selectedRowProjects } from "@/lib/schema";
 import NotFoundButton from "../not-found-button";
 import { OFFSET_DATA } from "@/lib/constants";
+import { Prisma } from "@/lib/generated/prisma/client";
 
 export type PortofoliosType = Prisma.ProjectGetPayload<{
 	select: typeof selectedRowProjects;
@@ -45,8 +46,8 @@ const Projects = ({ projects, categories, itemCount }: ProjectsProps) => {
 			? allProjects.length > 0 && isTabActive === "all"
 				? slicesProjects
 				: slicesProjects?.filter(
-						p => p.category.name.toLowerCase() === isTabActive.toLowerCase()
-				  )
+						p => p.category.name.toLowerCase() === isTabActive.toLowerCase(),
+					)
 			: [];
 
 	return (
