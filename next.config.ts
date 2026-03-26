@@ -1,10 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-	reactCompiler: true,
 	/* config options here */
 	experimental: {
 		// ppr: true,
+		reactCompiler: true,
 		serverActions: {
 			bodySizeLimit: "5mb",
 		},
@@ -19,7 +19,6 @@ const nextConfig: NextConfig = {
 			},
 			new URL("https://vy6h6fhwkpvikfqj.public.blob.vercel-storage.com/**"),
 		],
-		qualities: [75, 90],
 		dangerouslyAllowSVG: true,
 	},
 };
