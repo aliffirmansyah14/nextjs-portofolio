@@ -2,13 +2,13 @@
 import { prisma } from "./prisma";
 import { cache } from "react";
 import { selectedRowProjects } from "./schema";
-import {
-	DefaultArgs,
-	PrismaClientKnownRequestError,
-} from "@prisma/client/runtime/library";
 import { Prisma } from "@prisma/client";
 import { OFFSET_DATA } from "./constants";
 import { getSession } from "next-auth/react";
+import {
+	DefaultArgs,
+	PrismaClientKnownRequestError,
+} from "@prisma/client/runtime/client";
 
 export const getCategories = cache(async () => {
 	try {
@@ -67,13 +67,13 @@ export const getPortofolios = cache(
 			// 	throw new Error("error di get portofolios" + error.message);
 			// }
 		}
-	}
+	},
 );
 
 export const getPortofolioById = cache(
 	async (
 		idProject: string,
-		selecttedProject: Prisma.ProjectSelect<DefaultArgs> | null | undefined
+		selecttedProject: Prisma.ProjectSelect<DefaultArgs> | null | undefined,
 	) => {
 		try {
 			return await prisma.project.findUnique({
@@ -87,7 +87,7 @@ export const getPortofolioById = cache(
 		} catch (error) {
 			throw new Error("Error di getportofolio by id");
 		}
-	}
+	},
 );
 
 export const getCountPortofolios = cache(async (query?: string) => {
