@@ -1,9 +1,9 @@
-import { Prisma } from "@prisma/client";
 import { Badge } from "@/components/ui/badge";
 // import { use } from "react";
 import { selectedRowProjects } from "@/lib/schema";
 import { formatDateToIndonesia } from "@/lib/utils";
 import ActionButtonPortofolioTable from "@/components/shared/dashboard/portofolio/actions-button-portofolio";
+import { Prisma } from "@/lib/generated/prisma/client";
 
 export type portofoliosType = Prisma.ProjectGetPayload<{
 	select: typeof selectedRowProjects;
@@ -18,7 +18,7 @@ const TablePortofolio = ({ portofolios }: TablePortofolioProps) => {
 
 	if (allPortofolios !== undefined && allPortofolios.length > 0) {
 		const columns = Object.keys(allPortofolios[0]).map(
-			col => col.toLowerCase().split("url")[0]
+			col => col.toLowerCase().split("url")[0],
 		);
 		columns.shift();
 		return (

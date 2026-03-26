@@ -4,7 +4,7 @@ import LoadingSpinner from "@/components/shared/dashboard/portofolio/loading-spi
 import SiderbarTriggerMobile from "@/components/shared/dashboard/sidebar/sidebar-trigger-mobile";
 import { Card, CardContent } from "@/components/ui/card";
 import { getCategories, getPortofolioById } from "@/lib/api";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 

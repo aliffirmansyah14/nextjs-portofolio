@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@/lib/generated/prisma/client";
 
 export type CategoriesType = Prisma.CategoryGetPayload<{
 	select: {

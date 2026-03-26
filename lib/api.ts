@@ -2,13 +2,13 @@
 import { prisma } from "./prisma";
 import { cache } from "react";
 import { selectedRowProjects } from "./schema";
-import { Prisma } from "@prisma/client";
 import { OFFSET_DATA } from "./constants";
 import { getSession } from "next-auth/react";
 import {
 	DefaultArgs,
 	PrismaClientKnownRequestError,
 } from "@prisma/client/runtime/client";
+import { Prisma } from "./generated/prisma/client";
 
 export const getCategories = cache(async () => {
 	try {
